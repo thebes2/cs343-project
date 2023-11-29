@@ -17,3 +17,10 @@ Main classes:
 - [ ] BottlingPlant: another isolated task, just used by Truck
 - [ ] Truck: depends on BottlingPlant and VendingMachine
 - [ ] NameServer: used by both Student and VendingMachine
+
+### Plan
+
+Nov 29:
+- Makefile
+- Config parser & printer
+- At least 1-2 of the isolated tasks (probably Parent and BottlingPlant)

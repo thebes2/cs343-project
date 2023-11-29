@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
 
 struct ConfigParms {
 	unsigned int sodaCost;								// MSRP per bottle
@@ -14,3 +15,5 @@ struct ConfigParms {
 }; // ConfigParms
 
 void processConfigFile( const char * configFile, ConfigParms & cparms );
+
+#endif
