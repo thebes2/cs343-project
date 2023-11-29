@@ -35,19 +35,6 @@
 // 	Job * requestWork() __attribute__(( warn_unused_result ));
 // };
 
-// _Monitor Bank {
-//   public:
-// 	Bank( unsigned int numStudents );
-// 	void deposit( unsigned int id, unsigned int amount );
-// 	void withdraw( unsigned int id, unsigned int amount );
-// };
-
-// _Task Parent {
-// 	void main();
-//   public:
-// 	Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay );
-// };
-
 // _Task Groupoff {
 // 	void main();
 //   public:
@@ -94,18 +81,6 @@
 //   public:
 // 	Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
 // 		   unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
-// };
-
-// _Monitor / _Cormonitor Printer {
-//   public:
-// 	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
-// 	Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );
-// 	void print( Kind kind, char state );
-// 	void print( Kind kind, char state, unsigned int value1 );
-// 	void print( Kind kind, char state, unsigned int value1, unsigned int value2 );
-// 	void print( Kind kind, unsigned int lid, char state );
-// 	void print( Kind kind, unsigned int lid, char state, unsigned int value1 );
-// 	void print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2 );
 // };
 
 #include <iostream>
