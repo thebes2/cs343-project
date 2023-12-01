@@ -42,7 +42,6 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
     }
 }
 
-
 void VendingMachine::main() {
     // register with name server
     nameServer.VMRegister(*this);
