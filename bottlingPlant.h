@@ -9,7 +9,7 @@ _Task BottlingPlant {
     bool isShutdown;
     void main();
   public:
-    enum Flavours {Blues_Black_Cherry, Classic_Cream_Soda, Rock_Root_Beer, Jazz_Lime}; // flavours of soda (YOU DEFINE)
+    enum Flavours {Blues_Black_Cherry=0, Classic_Cream_Soda=1, Rock_Root_Beer=2, Jazz_Lime=3}; // flavours of soda (YOU DEFINE)
     _Event Shutdown {}; // shutdown plant
     BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines, unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour, unsigned int timeBetweenShipments );
     void getShipment( unsigned int cargo[] );
