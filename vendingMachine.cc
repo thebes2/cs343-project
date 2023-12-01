@@ -31,7 +31,7 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
 
 void VendingMachine::main() {
     // register with name server
-    nameServer.VMregister(this);
+    nameServer.VMregister(id);
     for(;;) {
         _Accept(~VendingMachine) {
             break;
