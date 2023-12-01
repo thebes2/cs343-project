@@ -29,13 +29,13 @@ void Truck::main() {
                 break;
             }
             for(int i=((lastMachine + 1) % numVendingMachines); i<numVendingMachines; i++) {
-                int *inventory = machines[i].inventory();
+                int *inventory = machines[i]->inventory();
                 for(int j=0; j<4; j++) {
                     unsigned int amtAdd = min(shipment[j], maxShippedPerFlavour-inventory[j]);
                     inventory[j] += amtAdd;
                     shipment[j] -= amtAdd;
                 }
-                machines[i].restock();
+                machines[i]->restock();
                 if(empty(shipment)) break;
             }
             if(prng(100)==0) yield(10);

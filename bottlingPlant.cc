@@ -3,6 +3,7 @@
 
 BottlingPlant::getShipment(unsigned int cargo[]) {
     if(isShutdown) {
+        uRendezvousAcceptor();
         _Throw Shutdown{};
     }
     for(unsigned int i=0; i<numFlavours; i++) {
@@ -26,12 +27,8 @@ void BottlingPlant::main() {
         _Accept(~BottlingPlant) {
             isShutdown = true;
             while(true) {
-                try {
-                    _Accept(getShipment) {}
-                    _Else {break;}
-                } catch (uMutexFailure::RendezvousFailure &) {
-                     // likely happened because getShipment couldn't be accepted since bottling plant is shutting down
-                }
+                _Accept(getShipment) {}
+                _Else {break;}
             }
             break;
         } or _Accept(getShipment) {
