@@ -2,6 +2,7 @@
 #define _BANK_H_
 
 _Monitor Bank {
+	unsigned int numStudents;
 	unsigned int *balance;
 	uCondition *waiters;
   public:

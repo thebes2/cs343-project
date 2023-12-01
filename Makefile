@@ -2,7 +2,8 @@ CXX = u++					# compiler
 CXXFLAGS = -g -multi -Wall -Wextra -MMD -DSTRSTREAM # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS = config.o soda.o # list of object files
+OBJECTS = config.o soda.o printer.o parent.o bank.o groupoff.o \
+			watCard.o # list of object files
 EXEC = soda
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"

@@ -1,15 +1,18 @@
 #include "parent.h"
 
 void Parent::main() {
+    printer.print(Printer::Kind::Parent, 'S');
     for (;;) {
-        for (int i=0;i<parentalDelay;i++) {
+        for (unsigned int i=0;i<parentalDelay;i++) {
             _When(true) _Accept(~Parent) { return; } // exit
             _Else { yield(1); }
         }
         unsigned int id = prng(numStudents);
-        unsigned int amt = prng(2) + 1;
+        unsigned int amt = prng(3) + 1;
+        printer.print(Printer::Kind::Parent, 'D', id, amt);
         bank.deposit(id, amt);
     }
+    printer.print(Printer::Kind::Parent, 'F');
 }
 
 Parent::Parent(Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay)

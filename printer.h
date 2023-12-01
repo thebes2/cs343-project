@@ -2,7 +2,10 @@
 #define _PRINTER_H_
 
 _Monitor Printer {
-	// PrintState is a struct for storing printing information
+  public:
+	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
+  private:
+ 	// PrintState is a struct for storing printing information
 	struct PrintState {
 		char state;
 		unsigned int value1;
@@ -25,11 +28,10 @@ _Monitor Printer {
 	unsigned int getColumn(Kind kind);
 	unsigned int getColumn(Kind kind, unsigned int lid);
 
-	// display names of each class
-	const char* []classNames = ["Parent", "Gropoff", "WATOff", "Names", "Truck", "Plant", "Stud", "Mach", "Cour"];
 	const unsigned int singletons = 6; // number of classes that only have a single instance
+	// display names of each class
+	const char* classNames[9] = {"Parent", "Gropoff", "WATOff", "Names", "Truck", "Plant", "Stud", "Mach", "Cour"};
   public:
-	enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
 	Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );
 	~Printer();
 	void print( Kind kind, char state );

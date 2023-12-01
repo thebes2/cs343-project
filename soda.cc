@@ -28,17 +28,6 @@
 // 	VendingMachine ** getMachineList() __attribute__(( warn_unused_result ));
 // };
 
-// _Task BottlingPlant {
-// 	void main();
-//   public:
-// 	enum Flavours { ..., NUM_OF_FLAVOURS };	// flavours of soda (YOU DEFINE)
-// 	_Event Shutdown {};					// shutdown plant
-// 	BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
-// 				 unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
-// 				 unsigned int timeBetweenShipments );
-// 	void getShipment( unsigned int cargo[] );
-// };
-
 // _Task Truck {
 // 	void main();
 //   public:
@@ -47,11 +36,16 @@
 // };
 
 #include <iostream>
+#include <string>
 #include "config.h"
+#include "printer.h"
+#include "bank.h"
+#include "parent.h"
+#include "groupoff.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	char *configFile = "soda.config";
+	string configFile = "soda.config";
 	int seed = -1, processors = 1;
 	ConfigParms config;
 	struct cmd_error{};
@@ -74,11 +68,26 @@ int main(int argc, char *argv[]) {
 			case 1: break;
 			default: throw cmd_error{};
 		}
-		processConfigFile(configFile, config);
+		processConfigFile(configFile.c_str(), config);
 	}
-	catch (cmd_error&) {
+	catch ( ... ) {
 		cerr << "Usage: " << argv[0] << " [ config-file | 'd' [ seed (> 0) | 'd' [ processors (> 0) | 'd' ] ] ]" << endl;
 		exit(EXIT_FAILURE);
 	}
-	cout << "NumStudents: " << config.numStudents << endl;
+
+	// basic test where we will launch the parent and bank and see if they compile
+	Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
+	Bank bank(config.numStudents);
+	Parent parent(printer, bank, config.numStudents, config.parentalDelay);
+	Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
+	// simulate all students calling groupoff
+	for (unsigned int i=0;i<config.numStudents;i++) {
+		groupoff.giftCard();
+	}
+	float a = 2.0;
+	// spin for some time...
+	for (int i=0;i<1000000000;i++) {
+		a = a*a - 2.0;
+	}
+	return 0;
 }
