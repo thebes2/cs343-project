@@ -7,6 +7,7 @@ _Task BottlingPlant {
     NameServer &nameServer;
     unsigned int numVendingMachines, maxShippedPerFlavour, maxStockPerFlavour, timeBetweenShipments, randomQuantity, numFlavours;
     bool isShutdown;
+    int *loadingCargo;
     void main();
   public:
     enum Flavours {Blues_Black_Cherry=0, Classic_Cream_Soda=1, Rock_Root_Beer=2, Jazz_Lime=3}; // flavours of soda (YOU DEFINE)

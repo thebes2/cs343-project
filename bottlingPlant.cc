@@ -1,14 +1,10 @@
 #include "bottlingPlant.h"
 #include "uPRNG.h"
 
-BottlingPlant::getShipment(unsigned int cargo[]) {
-    if(isShutdown) {
-        uRendezvousAcceptor();
-        _Throw Shutdown{};
-    }
-    for(unsigned int i=0; i<numFlavours; i++) {
-        cargo[i] = randomQuantity;
-    }
+void BottlingPlant::getShipment(unsigned int cargo[]) {
+    loadingCargo = cargo;
+    // sync call, go to sleep
+    bench.wait(*this);
 }
 
 BottlingPlant::BottlingPlant(Printer & prt, NameServer & nameServer, unsigned int numVendingMachines, unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour, unsigned int timeBetweenShipments) :
@@ -27,12 +23,19 @@ void BottlingPlant::main() {
         _Accept(~BottlingPlant) {
             isShutdown = true;
             while(true) {
-                _Accept(getShipment) {}
+                _Accept(getShipment) {
+                    _Resume Shutdown{} _At bench.front();
+                    bench.signalBlock();
+                }
                 _Else {break;}
             }
             break;
         } or _Accept(getShipment) {
+            for(unsigned int i=0; i<numFlavours; i++) {
+                loadingCargo[i] = randomQuantity;
+            }
             randomQuantity = 0;
+            bench.signalBlock();
         }
     }
 }

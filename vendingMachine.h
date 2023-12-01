@@ -5,12 +5,17 @@
 
 
 _Task VendingMachine {
+
     Printer &printer;
     NameServer &nameserver;
     unsigned int id, sodaCost;
     int sodaInventory[4] = {};
     bool restocking;
+    BottlingPlant::Flavour currFlavour;
+    WATCard currCard;
+    uCondition bench;
     void main();
+
   public:
     _Event Free {}; // free, advertisement
     _Event Funds {}; // insufficient funds

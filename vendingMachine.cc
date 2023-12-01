@@ -22,23 +22,9 @@ unsigned int * VendingMachine::inventory() {
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
-    if(card.getBalance()>=sodaCost) {
-        if(sodaInventory[flavour]>0)> {
-            if(yield(5)==0) {
-                uRendezvousAcceptor();
-                _Throw Free{};
-            } else  {
-                // what happens if they now suddenly don't have money
-                card.withdraw(sodaCost);
-            }
-        } else {
-            uRendezvousAcceptor();
-            _Throw Stock{}; 
-        }
-     } else {
-        uRendezvousAcceptor();
-        _Throw Funds{};
-    }
+    currFlavour = flavour;
+    currCard = card;
+    bench.wait(*this);
 }
 
 
@@ -49,7 +35,17 @@ void VendingMachine::main() {
         _Accept(~VendingMachine) {
             break;
         } or _When(!restocking) _Accept(buy) {
-
+            // buy done by student or exception was thrown
+            if(currCard.getBalance()<sodaCost) {
+                _Resume Funds{} _At bench.front();
+            } else if(sodaInventory[flavour]==0) {
+                _Resume Stock{} _At bench.front();
+            } else if(prng(5)==0) {
+                _Resume Free{} _At bench.front();
+            } else {
+                card.withdraw(sodaCost);
+            }
+            bench.signalBlock();
         } or _Accept(inventory) {
             restocking = true;
         } or _Accept(restocked) {
