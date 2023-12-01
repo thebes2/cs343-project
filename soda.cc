@@ -41,6 +41,7 @@
 #include "printer.h"
 #include "bank.h"
 #include "parent.h"
+#include "groupoff.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -78,6 +79,11 @@ int main(int argc, char *argv[]) {
 	Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
 	Bank bank(config.numStudents);
 	Parent parent(printer, bank, config.numStudents, config.parentalDelay);
+	Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
+	// simulate all students calling groupoff
+	for (unsigned int i=0;i<config.numStudents;i++) {
+		groupoff.giftCard();
+	}
 	float a = 2.0;
 	// spin for some time...
 	for (int i=0;i<1000000000;i++) {

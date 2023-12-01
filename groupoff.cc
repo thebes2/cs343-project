@@ -18,20 +18,23 @@ Groupoff::~Groupoff() {
 }
 
 void Groupoff::main() {
+    printer.print(Printer::Kind::Groupoff, 'S');
     for (counter=0;counter<numStudents;counter++) { _Accept(giftCard); }
     for (unsigned int i=0;i<numStudents;i++) {
         for (unsigned int j=0;j<groupoffDelay;j++) {
             _Accept(~Groupoff) { goto shutdown; }
             _Else { yield(1); }
         }
-        WATCard card = new WATCard;
-        card.deposit(sodaCost);
-        futures[order[i]]->result.delivery(card);
+        WATCard *card = new WATCard;
+        card->deposit(sodaCost);
+        printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
+        futures[order[i]]->delivery(card);
     } shutdown:
+    printer.print(Printer::Kind::Groupoff, 'F');
 }
 
-WATCard::FWATCard giftCard() {
+WATCard::FWATCard Groupoff::giftCard() {
     WATCard::FWATCard *result = new WATCard::FWATCard;
     futures[counter] = result;
-    return result;
+    return *result;
 }
