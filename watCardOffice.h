@@ -1,7 +1,7 @@
 #ifndef _WATCARDOFFICE_H_
 #define _WATCARDOFFICE_H_
 
-#include "watcard.h"
+#include "watCard.h"
 #include "bank.h"
 #include "printer.h"
 
@@ -19,7 +19,7 @@ _Task WATCardOffice {
         Bank &bank;
         void main();
     public:
-        Courier(WATCardOffice& office, Bank &bank) = default;
+        Courier(WATCardOffice& office, Bank &bank);
     };
 
     uCondition courierPool;

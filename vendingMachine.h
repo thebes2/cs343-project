@@ -1,18 +1,18 @@
 #ifndef _VENDING_MACHINE_H
 #define _VENDING_MACHINE_H
+
 #include "watCard.h"
 #include "bottlingPlant.h"
-
+#include "nameServer.h"
 
 _Task VendingMachine {
-
     Printer &printer;
-    NameServer &nameserver;
+    NameServer &nameServer;
     unsigned int id, sodaCost;
-    int sodaInventory[4] = {};
+    unsigned int sodaInventory[4] = {};
     bool restocking;
-    BottlingPlant::Flavour currFlavour;
-    WATCard currCard;
+    BottlingPlant::Flavours currFlavour;
+    WATCard* currCard;
     uCondition bench;
     void main();
 
@@ -27,3 +27,5 @@ _Task VendingMachine {
     _Nomutex unsigned int cost() const;
     _Nomutex unsigned int getId() const;
 };
+
+#endif

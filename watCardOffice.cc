@@ -1,6 +1,15 @@
 #include "watCardOffice.h"
 
-void WATCardOffice::Courier::main() {
+WATCardOffice::Job* WATCardOffice::requestWork() {
+    // the main thread of WATCardOffice will _Accept requestWork once there are jobs
+}
+
+using WATCardOffice::Courier
+
+Courier::Courier(WATCardOffice& office, Bank& bank)
+    : office(office), bank(bank) {}
+
+void Courier::main() {
     for (;;) {
         Job* request = office.requestWork();
         unsigned int id = request->args.id, amount = request->args.amount;
@@ -15,10 +24,6 @@ void WATCardOffice::Courier::main() {
         }
     }
 }
-
-WATCardOffice::Job* WATCardOffice::requestWork() {
-    // the main thread of WATCardOffice will _Accept requestWork once there are jobs
-} 
 
 /*
 

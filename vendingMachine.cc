@@ -1,16 +1,17 @@
 #include "vendingMachine.h"
 #include "watCard.h"
+#include "student.h"
 using namespace std;
 
 VendingMachine::VendingMachine(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost) :
 printer{prt}, nameServer{nameServer}, id{id}, sodaCost{sodaCost}, restocking{false} {}
 
-unsigned int cost() const {
+unsigned int VendingMachine::cost() const {
     return sodaCost;
 }
 
-unsigned int getId() const {
-    return Id;
+unsigned int VendingMachine::getId() const {
+    return id;
 }
 
 void VendingMachine::restocked() {
@@ -18,32 +19,32 @@ void VendingMachine::restocked() {
 }
 
 unsigned int * VendingMachine::inventory() {
-    return &sodaInventory;
+    return sodaInventory;
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
     currFlavour = flavour;
-    currCard = card;
-    bench.wait(*this);
+    currCard = &card;
+    bench.wait((uintptr_t)(void*)this);
 }
 
 
 void VendingMachine::main() {
     // register with name server
-    nameServer.VMRegister(*this);
+    nameServer.VMregister(this);
     for(;;) {
         _Accept(~VendingMachine) {
             break;
         } or _When(!restocking) _Accept(buy) {
             // buy done by student or exception was thrown
-            if(currCard.getBalance()<sodaCost) {
-                _Resume Funds{} _At bench.front();
-            } else if(sodaInventory[flavour]==0) {
-                _Resume Stock{} _At bench.front();
+            if(currCard->getBalance()<sodaCost) {
+                _Resume Funds{} _At *(Student*)(void*)bench.front();
+            } else if(sodaInventory[currFlavour]==0) {
+                _Resume Stock{} _At *(Student*)(void*)bench.front();
             } else if(prng(5)==0) {
-                _Resume Free{} _At bench.front();
+                _Resume Free{} _At *(Student*)(void*)bench.front();
             } else {
-                card.withdraw(sodaCost);
+                currCard->withdraw(sodaCost);
             }
             bench.signalBlock();
         } or _Accept(inventory) {

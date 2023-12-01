@@ -9,14 +9,14 @@ void NameServer::VMregister(VendingMachine *vendingmachine) {
 }
 
 VendingMachine * NameServer::getMachine(unsigned int id) {
-
+    return nullptr;
 }
 
 VendingMachine ** NameServer::getMachineList() {
-
+    return nullptr;
 }
 
-void NameServer::void() {
+void NameServer::main() {
 
 }
 
