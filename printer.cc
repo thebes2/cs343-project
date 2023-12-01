@@ -46,7 +46,7 @@ void Printer::print(Kind kind, unsigned int lid, char state, unsigned int value1
 }
 
 void Printer::print(Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2) {
-    unsigned int idx = getColumn(kind);
+    unsigned int idx = getColumn(kind, lid);
     if(buffer[idx].defined) flushBuffer();
     buffer[idx].state = state;
     buffer[idx].value1 = value1;
@@ -63,12 +63,12 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines, unsi
     // print header
     for (unsigned int i=0;i<singletons;i++) { cout << classNames[i] << "\t"; }
     // print students
-    for (unsigned int i=0;i<numStudents;i++) { cout << classNames[i] << i << "\t"; }
+    for (unsigned int i=0;i<numStudents;i++) { cout << classNames[singletons] << i << "\t"; }
     // print machines
-    for (unsigned int i=0;i<numStudents;i++) { cout << classNames[i] << i << "\t"; }
+    for (unsigned int i=0;i<numVendingMachines;i++) { cout << classNames[singletons+1] << i << "\t"; }
     // print couriers
-    for (unsigned int i=0;i<numStudents;i++) {
-        cout << classNames[i] << i << (i+1 == numStudents? "\n":"\t");
+    for (unsigned int i=0;i<numCouriers;i++) {
+        cout << classNames[singletons+2] << i << (i+1 == numCouriers? "\n":"\t");
     }
 
     for (unsigned int i=0;i<totalCols;i++) {
@@ -78,13 +78,14 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines, unsi
 
 Printer::~Printer() {
     cout << "***********************" << endl;
+    delete[] buffer;
 }
 
 unsigned int Printer::getColumn(Kind kind) {
     unsigned int idx = 0;
     switch (kind) {
       case Parent: idx = 0; break;
-      case GroupOff: idx = 1; break;
+      case Groupoff: idx = 1; break;
       case WATCardOffice: idx = 2; break;
       case NameServer: idx = 3; break;
       case Truck: idx = 4; break;
@@ -120,7 +121,7 @@ void Printer::displayState(PrintState &s, char suf) {
     cout << suf;
 }
 
-void Printer::flush_buffer() {
+void Printer::flushBuffer() {
     unsigned int lastDefined = 0;
     for (unsigned int i=0;i<totalCols;i++) {
         if (buffer[i].defined) { lastDefined = i+1; }
