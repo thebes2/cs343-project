@@ -19,7 +19,10 @@ void BottlingPlant::main() {
     for(;;) {
         if(randomQuantity==0) {
             // perform production run and yield
-            randomQuantity = prng(0, maxShippedPerFlavour+1);
+            for(unsigned int i=0; i<numFlavours; i++) {
+                currentStock[i] = prng(0, maxShippedPerFlavour+1);
+                randomQuantity += currentStock[i];
+            }
             printer.print(Printer::Kind::BottlingPlant, 'G', randomQuantity);
             yield(timeBetweenShipments);
         }
@@ -35,9 +38,10 @@ void BottlingPlant::main() {
             break;
         } or _Accept(getShipment) {
             for(unsigned int i=0; i<numFlavours; i++) {
-                loadingCargo[i] = randomQuantity;
+                loadingCargo[i] = currentStock[i];
+                randomQuantity -= loadingCargo[i];
+                currentStock[i] = 0;
             }
-            randomQuantity = 0;
             printer.print(Printer::Kind::BottlingPlant, 'P');
             bench.signalBlock();
         }
