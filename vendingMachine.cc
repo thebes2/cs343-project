@@ -2,7 +2,6 @@
 #include "watCard.h"
 using namespace std;
 
-
 VendingMachine::VendingMachine(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost) :
 printer{prt}, nameServer{nameServer}, id{id}, sodaCost{sodaCost}, restocking{false} {}
 
@@ -41,6 +40,7 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
         _Throw Funds{};
     }
 }
+
 
 void VendingMachine::main() {
     // register with name server
