@@ -33,7 +33,7 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
             }
         } else {
             uRendezvousAcceptor();
-            _Throw Stock{};
+            _Throw Stock{}; 
         }
      } else {
         uRendezvousAcceptor();
