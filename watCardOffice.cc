@@ -4,7 +4,7 @@ WATCardOffice::Job* WATCardOffice::requestWork() {
     // the main thread of WATCardOffice will _Accept requestWork once there are jobs
 }
 
-using WATCardOffice::Courier
+using WATCardOffice::Courier;
 
 Courier::Courier(WATCardOffice& office, Bank& bank)
     : office(office), bank(bank) {}

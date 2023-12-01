@@ -8,7 +8,7 @@ using namespace std;
 Truck::Truck(Printer & prt, NameServer & nameServer, BottlingPlant & plant, unsigned int numVendingMachines, unsigned int maxStockPerFlavour) : 
 printer{prt}, nameServer{nameServer}, plant{plant}, numVendingMachines{numVendingMachines}, maxStockPerFlavour{maxStockPerFlavour} {}
 
-bool Truck::total(unsigned int *arr) {
+unsigned int Truck::total(unsigned int *arr) {
     unsigned int tot = 0;
     for(int i=0; i<4; i++) { tot += arr[i]; }
     return tot;
