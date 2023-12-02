@@ -6,16 +6,21 @@ WATCardOffice::Courier::Courier(WATCardOffice& office, Bank& bank)
     : office(office), bank(bank) {}
 
 void WATCardOffice::Courier::main() {
+    // _Else below might be a really bad way of doing this
+    // Maybe requestWork can return nullptr to indicate no work
     for (;;) {
-        Job* request = office.requestWork();
-        unsigned int id = request->args.id, amount = request->args.amount;
-        bank.withdraw(id, amount);
-        if (prng(6) == 0) { // lost WATCard
-            request->result.delivery( new Lost{} );
-        }
-        else {
-            request->args.card->deposit(amount);
-            request->result.delivery(request->args.card);
+        _Accept(~Courier) {break;}
+        _Else {
+            Job* request = office.requestWork();
+            unsigned int id = request->args.id, amount = request->args.amount;
+            bank.withdraw(id, amount);
+            if (prng(6) == 0) { // lost WATCard
+                request->result.delivery( new Lost{} );
+            }
+            else {
+                request->args.card->deposit(amount);
+                request->result.delivery(request->args.card);
+            }
         }
     }
 }
