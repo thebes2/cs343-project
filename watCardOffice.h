@@ -28,9 +28,13 @@ _Task WATCardOffice {
 		Job *job;
 		jobNode(Job *job) : job{job} {}
 	};
+	struct Card: uSeqable {
+		WATCard *card;
+		Card(WATCard *card) : card{card} {}
+	};
 
 	uSequence<jobNode> jobs;
-	uCondition bench;
+	uSequence<Card> cards;
 	WATCard::FWATCard result;
 
 	Printer &printer;
@@ -42,6 +46,7 @@ _Task WATCardOffice {
   public:
 	_Event Lost {};							// lost WATCard
 	WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers );
+	~WATCardOffice();
 	WATCard::FWATCard create( unsigned int sid, unsigned int amount ) __attribute__(( warn_unused_result ));
 	WATCard::FWATCard transfer( unsigned int sid, unsigned int amount, WATCard * card ) __attribute__(( warn_unused_result ));
 	Job * requestWork() __attribute__(( warn_unused_result ));

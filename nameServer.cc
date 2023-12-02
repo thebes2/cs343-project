@@ -30,7 +30,6 @@ VendingMachine ** NameServer::getMachineList() {
 }
 
 
-
 void NameServer::main() {
     printer.print(Printer::Kind::NameServer, 'S');
     for(;;) {
@@ -47,3 +46,4 @@ void NameServer::main() {
     printer.print(Printer::Kind::NameServer, 'F');
 }
 
+NameServer::~NameServer() {}

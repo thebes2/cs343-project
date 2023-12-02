@@ -23,6 +23,7 @@ void WATCardOffice::Courier::main() {
 
 WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
     WATCard *newCard = new WATCard;
+    cards.add(new Card{newCard});
     Job *newCardJob = new Job{Args{sid, amount, newCard}};
     jobs.add(new jobNode{newCardJob});
     return newCardJob->result;
@@ -52,5 +53,31 @@ void WATCardOffice::main() {
         } or _Accept(create) {
 
         }
+    }
+}
+
+WATCardOffice::~WATCardOffice() {
+    // delete courier pool
+    for(unsigned int i=0; i<numCouriers; i++) {
+        delete courierPool[i];
+    }
+    delete[] courierPool;
+
+    // delete watcards
+    uSeqIter<Card> seqIterCard;
+    Card * cp;
+    for(seqIterCard.over(cards); seqIterCard>>cp;) {
+        delete cp->card;
+        cards.remove(cp);
+        delete cp;
+    }
+    
+    //delete outstanding jobs?
+    uSeqIter<jobNode> seqIterJob;
+    jobNode * jp;
+    for(seqIterJob.over(jobs); seqIterJob>>jp;) {
+        delete jp->job;
+        jobs.remove(jp);
+        delete jp;
     }
 }
