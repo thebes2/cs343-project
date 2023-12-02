@@ -50,7 +50,7 @@ void Student::main() {
 			}
 			catch (VendingMachine::Funds&) { // insufficient funds, so transfer funds to watcard
 				assert(currentCard == &watcard);
-				office.transfer(id, 5+currentVM->cost(), card);
+				watcard = office.transfer(id, 5+currentVM->cost(), card);
 			}
 			catch (VendingMachine::Stock&) { // get new vending machine and try again
 				currentVM = nameServer.getMachine(id);
