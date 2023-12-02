@@ -4,7 +4,7 @@ using namespace std;
 
 Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay)
     : printer(prt), numStudents(numStudents), sodaCost(sodaCost), groupoffDelay(groupoffDelay), counter(0),
-      order(new unsigned int[numStudents]), futures(new WATCard::FWATCard*[numStudents]) {
+      order(new unsigned int[numStudents]) {
     // set order that the gift cards will be filled
     for (unsigned int i=0;i<numStudents;i++) { order[i] = i; }
     for (unsigned int i=0;i<numStudents;i++) {
@@ -14,27 +14,47 @@ Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost
 
 Groupoff::~Groupoff() {
     delete[] order;
-    delete[] futures; // incomplete futures are the problem of the client now
+    // delete[] futures; // incomplete futures are the problem of the client now
+    uSeqIter<FWATCardNode> seqIterJob;
+    FWATCardNode *curr;
+    for(seqIterJob.over(futures); seqIterJob>>curr;) {
+        futures.remove(curr);
+        delete curr;
+    }
+}
+
+WATCard::FWATCard Groupoff::giftCard() {
+    WATCard::FWATCard newCard;
+    currentCard = newCard;
+    return currentCard;
 }
 
 void Groupoff::main() {
     printer.print(Printer::Kind::Groupoff, 'S');
-    for (counter=0;counter<numStudents;counter++) { _Accept(giftCard); }
-    for (unsigned int i=0;i<numStudents;i++) {
-        for (unsigned int j=0;j<groupoffDelay;j++) {
-            _Accept(~Groupoff) { goto shutdown; }
-            _Else { yield(1); }
+    for(counter=0; counter<numStudents; counter++) {
+        _Accept(giftCard) {
+            futures.add(new FWATCardNode{currentCard});
         }
-        WATCard *card = new WATCard;
-        card->deposit(sodaCost);
-        printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
-        futures[order[i]]->delivery(card);
-    } shutdown:
+    }
+    for(unsigned int i=0; i<numStudents; i++) {
+        _Accept(~Groupoff) {
+            break;
+        } _Else {
+            yield(groupoffDelay);
+            // actual card in the giftcard future is on the heap
+            WATCard *card = new WATCard;
+            uSeqIter<FWATCardNode> seqIterJob;
+            FWATCardNode *curr;
+            unsigned int index = 0;
+            for(seqIterJob.over(futures); seqIterJob>>curr;) {
+                if(index==order[i]) {
+                    curr->card.delivery(card);
+                    break;
+                }
+                index++;
+            }
+        }
+    }
     printer.print(Printer::Kind::Groupoff, 'F');
 }
 
-WATCard::FWATCard Groupoff::giftCard() {
-    WATCard::FWATCard *result = new WATCard::FWATCard;
-    futures[counter] = result;
-    return *result;
-}

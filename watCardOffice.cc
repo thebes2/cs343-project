@@ -47,7 +47,9 @@ void WATCardOffice::main() {
         _Accept(~WATCardOffice) {
             break;
         } or _When(!jobs.empty()) _Accept(requestWork) {
-            jobs.dropHead();
+            jobNode * curr = jobs.dropHead();
+            delete curr->job;
+            delete curr;
         } or _Accept(transfer) {
 
         } or _Accept(create) {
