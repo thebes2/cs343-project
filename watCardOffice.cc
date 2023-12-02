@@ -25,6 +25,16 @@ void Courier::main() {
     }
 }
 
+
+WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
+
+}
+
+WATCard::FWATCard transfer(unsigned int sid, unsigned int amount, WATCard * card) {
+    
+}
+
+
 /*
 
 The WATCardOffice is an administrator task used by a student to 
