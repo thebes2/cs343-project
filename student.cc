@@ -19,8 +19,8 @@ void Student::main() {
 	for (unsigned int i=0;i<numTimes;i++) {
 		yield(prng(1, 11));
 		for (;;) {
-			_When(true) _Select(giftcard) { currentCard = &giftcard; }
-			or _When(true) _Select(watcard) { currentCard = &watcard; }
+			 _Select(giftcard) { currentCard = &giftcard; }
+			or _Select(watcard) { currentCard = &watcard; }
 
 			try {
 				card = (*currentCard)();
@@ -46,7 +46,8 @@ void Student::main() {
 				else { // did not watch advertisement
 					printer.print(Printer::Kind::Student, 'X');
 				}
-				break;
+				//break below doesn't make sense, a free soda doesn't count as a purchase
+				//break;
 			}
 			catch (VendingMachine::Funds&) { // insufficient funds, so transfer funds to watcard
 				assert(currentCard == &watcard);
