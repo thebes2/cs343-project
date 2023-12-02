@@ -11,6 +11,7 @@ void WATCardOffice::Courier::main() {
     for (;;) {
         _Accept(~Courier) {break;}
         _Else {
+            // not busy waiting since requestWork blocks if no work
             Job* request = office.requestWork();
             unsigned int id = request->args.id, amount = request->args.amount;
             bank.withdraw(id, amount);
@@ -25,7 +26,7 @@ void WATCardOffice::Courier::main() {
     }
 }
 
-
+// to-do: make functions below as lean as possible by moving work to main function
 WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
     WATCard *newCard = new WATCard;
     cards.add(new Card{newCard});
@@ -62,6 +63,8 @@ void WATCardOffice::main() {
         }
     }
 }
+
+WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers ) : printer{prt}, bank{bank}, numCouriers{numCouriers} {}
 
 WATCardOffice::~WATCardOffice() {
     // delete courier pool
