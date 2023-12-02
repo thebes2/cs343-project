@@ -4,11 +4,14 @@
 #include "watCard.h"
 #include "bank.h"
 #include "printer.h"
+#include <uFuture.h>
 
 _Task WATCardOffice {
-    struct Args {
-        unsigned int id, amount;
-    };
+	struct Args {
+		unsigned int id, amount;
+		WATCard *card;
+		Args(unsigned int id, unsigned int amount, WATCard *card) : id{id}, amount{amount}, card{card} {}
+	};
 	struct Job {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
 		WATCard::FWATCard result;			// return future
@@ -18,11 +21,22 @@ _Task WATCardOffice {
         WATCardOffice &office;
         Bank &bank;
         void main();
-    public:
+      public:
         Courier(WATCardOffice& office, Bank &bank);
     };
+	struct jobNode : uSeqable {
+		Job *job;
+		jobNode(Job *job) : job{job} {}
+	};
 
-    uCondition courierPool;
+	uSequence<jobNode> jobs;
+	uCondition bench;
+	WATCard::FWATCard result;
+
+	Printer &printer;
+	Bank &bank;
+	unsigned int numCouriers;
+	Courier **courierPool;
 
 	void main();
   public:
