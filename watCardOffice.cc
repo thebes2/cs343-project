@@ -42,6 +42,8 @@ void WATCardOffice::Courier::main() {
 
 // to-do: make functions below as lean as possible by moving work to main function
 WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
+    currSID = sid;
+    currAmount = amount;
     WATCard *newCard = new WATCard;
     cards.add(new Card{newCard});
     Job *newCardJob = new Job{Args{sid, amount, newCard}};
@@ -50,6 +52,8 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
 }
 
 WATCard::FWATCard WATCardOffice::transfer(unsigned int sid, unsigned int amount, WATCard * card) {
+    currSID = sid;
+    currAmount = amount;
     Job *transferJob = new Job{Args{sid, amount, card}};
     jobs.add(new jobNode{transferJob});
     return transferJob->result;
@@ -64,6 +68,7 @@ void WATCardOffice::main() {
     for(unsigned int i=0; i<numCouriers; i++) {
         courierPool[i] = new Courier{printer, *this, bank, i};
     }
+    printer.print(Printer::Kind::WATCardOffice, 'S');
     for(;;) {
         _Accept(~WATCardOffice) {
             for(;;) {
@@ -74,12 +79,14 @@ void WATCardOffice::main() {
         } or _When(!jobs.empty()) _Accept(requestWork) {
             jobNode * curr = jobs.dropHead();
             delete curr;
+            printer.print(Printer::Kind::WATCardOffice, 'W');
         } or _Accept(transfer) {
-
+            printer.print(Printer::Kind::WATCardOffice, 'T', currSID, currAmount);
         } or _Accept(create) {
-
+            printer.print(Printer::Kind::WATCardOffice, 'C', currSID, currAmount);
         }
     }
+    printer.print(Printer::Kind::WATCardOffice, 'F');
 }
 
 WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers )

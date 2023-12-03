@@ -41,7 +41,7 @@ _Task WATCardOffice {
 
 	Printer &printer;
 	Bank &bank;
-	unsigned int numCouriers;
+	unsigned int numCouriers, currSID, currAmount; 
 	Courier **courierPool;
 
 	_Event Empty{};
