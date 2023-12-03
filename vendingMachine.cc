@@ -30,7 +30,7 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
 
 void VendingMachine::main() {
     // register with name server
-    printer.print(Printer::Kind::Vending, 'S', sodaCost);
+    printer.print(Printer::Kind::Vending, id, 'S', sodaCost);
     nameServer.VMregister(this);
     for(;;) {
         _Accept(~VendingMachine) {
@@ -47,17 +47,17 @@ void VendingMachine::main() {
             } else {
                 currCard->withdraw(sodaCost);
                 sodaInventory[currFlavour] --;
-                printer.print(Printer::Kind::Vending, 'B', currFlavour, sodaInventory[currFlavour]);
+                printer.print(Printer::Kind::Vending, id, 'B', currFlavour, sodaInventory[currFlavour]);
             }
             bench.signalBlock();
         } or _Accept(inventory) {
-            printer.print(Printer::Kind::Vending, 'r');
+            printer.print(Printer::Kind::Vending, id, 'r');
             restocking = true;
         } or _Accept(restocked) {
-            printer.print(Printer::Kind::Vending, 'R');
+            printer.print(Printer::Kind::Vending, id, 'R');
             restocking = false;
         }
     }
-    printer.print(Printer::Kind::Vending, 'F');
+    printer.print(Printer::Kind::Vending, id, 'F');
 }
 
