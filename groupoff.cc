@@ -55,7 +55,9 @@ Groupoff::~Groupoff() {
     uSeqIter<FWATCardNode> seqIterJob;
     FWATCardNode * fp;
     for(seqIterJob.over(futures); seqIterJob>>fp;) {
-        delete fp->card();
+        if(fp->card.available()) {
+            delete fp->card();
+        }
         futures.remove(fp);
         delete fp;
     }
