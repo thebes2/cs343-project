@@ -4,14 +4,7 @@
 using namespace std;
 
 Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay)
-    : printer(prt), numStudents(numStudents), sodaCost(sodaCost), groupoffDelay(groupoffDelay), counter(0),
-      order(new unsigned int[numStudents]) {
-    // set order that the gift cards will be filled
-    for (unsigned int i=0;i<numStudents;i++) { order[i] = i; }
-    for (unsigned int i=0;i<numStudents;i++) {
-        swap(order[i], order[prng(numStudents)]);        
-    }
-}
+    : printer(prt), numStudents(numStudents), sodaCost(sodaCost), groupoffDelay(groupoffDelay), counter(0) { }
 
 WATCard::FWATCard Groupoff::giftCard() {
     WATCard::FWATCard newCard;
@@ -37,13 +30,14 @@ void Groupoff::main() {
             card->deposit(sodaCost);
             uSeqIter<FWATCardNode> seqIterJob;
             FWATCardNode *curr;
-            unsigned int index = 0;
+            unsigned int cnt = prng(numStudents - i);
             for(seqIterJob.over(futures); seqIterJob>>curr;) {
-                if(index==order[i]) {
+                if (cnt == 0 && !curr->delivered) {
+                    curr->delivered = true;
                     curr->card.delivery(card);
                     break;
                 }
-                index++;
+                if (!curr->delivered) { cnt --; }
             }
         }
     }
@@ -52,7 +46,6 @@ void Groupoff::main() {
 
 
 Groupoff::~Groupoff() {
-    delete[] order;
     uSeqIter<FWATCardNode> seqIterJob;
     FWATCardNode * fp;
     for(seqIterJob.over(futures); seqIterJob>>fp;) {

@@ -10,7 +10,7 @@ void BottlingPlant::getShipment(unsigned int cargo[]) {
 
 BottlingPlant::BottlingPlant(Printer & prt, NameServer & nameServer, unsigned int numVendingMachines, unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour, unsigned int timeBetweenShipments) :
 printer{prt}, nameServer{nameServer}, numVendingMachines{numVendingMachines}, maxShippedPerFlavour{maxShippedPerFlavour}, maxStockPerFlavour{maxStockPerFlavour}, timeBetweenShipments{timeBetweenShipments}, 
-randomQuantity{0}, numFlavours{4}, isShutdown{false} {}
+randomQuantity{0}, numFlavours{4} {}
 
 void BottlingPlant::main() {
     printer.print(Printer::Kind::BottlingPlant, 'S');
@@ -20,20 +20,16 @@ void BottlingPlant::main() {
         if(randomQuantity==0) {
             // perform production run and yield
             for(unsigned int i=0; i<numFlavours; i++) {
-                currentStock[i] = prng(0, maxShippedPerFlavour+1);
+                currentStock[i] = prng(0, maxShippedPerFlavour);
                 randomQuantity += currentStock[i];
             }
             printer.print(Printer::Kind::BottlingPlant, 'G', randomQuantity);
             yield(timeBetweenShipments);
         }
         _Accept(~BottlingPlant) {
-            isShutdown = true;
-            while(true) {
-                _Accept(getShipment) {
-                    _Resume Shutdown{} _At *(Truck*)(void*)bench.front();
-                    bench.signalBlock();
-                }
-                _Else {break;}
+            _Accept(getShipment) {
+                _Resume Shutdown{} _At *(Truck*)(void*)bench.front();
+                bench.signalBlock();
             }
             break;
         } or _Accept(getShipment) {

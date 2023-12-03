@@ -8,7 +8,6 @@ _Task BottlingPlant {
     Printer &printer;
     NameServer &nameServer;
     unsigned int numVendingMachines, maxShippedPerFlavour, maxStockPerFlavour, timeBetweenShipments, randomQuantity, numFlavours;
-    bool isShutdown;
     unsigned int *loadingCargo;
     uCondition bench;
     int currentStock[4] = {};

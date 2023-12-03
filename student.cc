@@ -4,22 +4,24 @@
 
 Student::Student(Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases)
-	: printer(prt), nameServer(nameServer), office(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {}
+  : printer(prt), nameServer(nameServer), office(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {
+	numTimes = prng(maxPurchases) + 1;
+	favouriteFlavour = prng(4);
+	printer.print(Printer::Kind::Student, id, 'S', favouriteFlavour, numTimes);
+}
 
 void Student::main() {
-	unsigned int numTimes = prng(maxPurchases) + 1;
-	unsigned int favouriteFlavour = prng(4);
-	printer.print(Printer::Kind::Student, id, 'S', favouriteFlavour, numTimes);
 	WATCard::FWATCard watcard = office.create(id, 5);
 	WATCard::FWATCard giftcard = groupoff.giftCard();
 	WATCard::FWATCard *currentCard = nullptr;
 	WATCard* card = nullptr;
 	VendingMachine *currentVM = nameServer.getMachine(id);
 	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
-	for (unsigned int i=0;i<numTimes;i++) {
-		yield(prng(1, 11));
+	unsigned int sodas = 0;
+	while (sodas < numTimes) {
+		yield(prng(1, 10));
 		for (;;) {
-			 _Select(giftcard) { currentCard = &giftcard; }
+			_Select(giftcard) { currentCard = &giftcard; }
 			or _Select(watcard) { currentCard = &watcard; }
 
 			try {
@@ -31,6 +33,7 @@ void Student::main() {
 						delete (*currentCard)();
 						currentCard->reset(); // giftcard is one time use only
 					}
+					sodas ++;
 					break;
 				}
 			}
@@ -48,16 +51,18 @@ void Student::main() {
 				else { // did not watch advertisement
 					printer.print(Printer::Kind::Student, id, 'X');
 				}
-				//break below doesn't make sense, a free soda doesn't count as a purchase
-				//break;
+				sodas ++;
+				break;
 			}
 			catch (VendingMachine::Funds&) { // insufficient funds, so transfer funds to watcard
 				assert(currentCard == &watcard);
 				watcard = office.transfer(id, 5+currentVM->cost(), card);
+				break;
 			}
 			catch (VendingMachine::Stock&) { // get new vending machine and try again
 				currentVM = nameServer.getMachine(id);
 				printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
+				break;
 			}
 		}
 	}

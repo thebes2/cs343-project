@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "uPRNG.h"
+#include <uPRNG.h>
 #include "printer.h"
 #include "watCardOffice.h"
 #include "config.h"
@@ -12,7 +12,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 	string configFile = "soda.config";
-	int seed = -1, processors = 1;
+	unsigned int seed = 0, processors = 1;
 	ConfigParms c;
 	struct cmd_error{};
 	try {
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	if (seed != -1) { set_seed(seed); }
+	if (seed != 0) { set_seed(seed); }
 
 	uProcessor p[processors - 1]; // number of kernel threads
 	{

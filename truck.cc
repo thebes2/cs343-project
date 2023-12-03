@@ -20,11 +20,11 @@ void Truck::main() {
     machines = nameServer.getMachineList();
     unsigned int shipment[numVendingMachines];
     for(;;) {
-        yield(prng(1, 11));
         _Accept(~Truck) {
             break;
         }
         _Else{
+            yield(prng(1, 10));
             try {
                 plant.getShipment(shipment);
             } catch(const BottlingPlant::Shutdown &) {

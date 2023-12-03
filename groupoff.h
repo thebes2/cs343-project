@@ -7,9 +7,9 @@
 _Task Groupoff {
     Printer &printer;
     unsigned int numStudents, sodaCost, groupoffDelay, counter;
-    unsigned int *order;
     struct FWATCardNode : uSeqable {
         WATCard::FWATCard card; 
+        bool delivered = false;
         FWATCardNode(WATCard::FWATCard card) : card{card} {}
     };
     WATCard::FWATCard currentCard;

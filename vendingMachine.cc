@@ -44,7 +44,6 @@ void VendingMachine::main() {
                 _Resume Stock{} _At *(Student*)(void*)bench.front();
             } 
             else if(prng(5)==0) {
-                ("3\n");
                 printer.print(Printer::Kind::Vending, id, 'A');
                 _Resume Free{} _At *(Student*)(void*)bench.front();
             }
