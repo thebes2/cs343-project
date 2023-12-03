@@ -12,7 +12,8 @@ _Task WATCardOffice {
 		WATCard *card;
 		Args(unsigned int id, unsigned int amount, WATCard *card) : id{id}, amount{amount}, card{card} {}
 	};
-	struct Job {							// marshalled arguments and return future
+	// refactor Job below to directly inherit from uSerqable
+	struct Job : uSeqable {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
 		WATCard::FWATCard result;			// return future
 		Job( Args args ) : args( args ) {}
@@ -26,16 +27,13 @@ _Task WATCardOffice {
       public:
         Courier(Printer & printer, WATCardOffice& office, Bank &bank, unsigned int id);
     };
-	struct jobNode : uSeqable {
-		Job *job;
-		jobNode(Job *job) : job{job} {}
-	};
+	
 	struct Card: uSeqable {
 		WATCard *card;
 		Card(WATCard *card) : card{card} {}
 	};
 
-	uSequence<jobNode> jobs;
+	uSequence<Job> jobs;
 	uSequence<Card> cards;
 	WATCard::FWATCard result;
 
