@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "groupoff.h"
+#include <iostream>
 using namespace std;
 
 Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay)
@@ -55,9 +56,6 @@ Groupoff::~Groupoff() {
     uSeqIter<FWATCardNode> seqIterJob;
     FWATCardNode * fp;
     for(seqIterJob.over(futures); seqIterJob>>fp;) {
-        if(fp->card.available()) {
-            delete fp->card();
-        }
         futures.remove(fp);
         delete fp;
     }

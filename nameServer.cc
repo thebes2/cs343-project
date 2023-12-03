@@ -47,4 +47,7 @@ void NameServer::main() {
     printer.print(Printer::Kind::NameServer, 'F');
 }
 
-NameServer::~NameServer() {}
+NameServer::~NameServer() {
+    delete[] registered;
+    delete[] assignments;
+}

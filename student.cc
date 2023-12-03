@@ -28,6 +28,7 @@ void Student::main() {
 				printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'B':'G'),
 							  favouriteFlavour, card->getBalance());
 				if (currentCard == &giftcard) {
+					delete (*currentCard)();
 					currentCard->reset(); // giftcard is one time use only
 				}
 				break;
