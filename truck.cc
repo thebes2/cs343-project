@@ -46,7 +46,7 @@ void Truck::main() {
                 if (unfilledStock > 0) {
                     printer.print(Printer::Kind::Truck, 'U', currMachine, unfilledStock);
                 }
-                machines[i]->restocked();
+                machines[currMachine]->restocked();
                 printer.print(Printer::Kind::Truck, 'D', currMachine, total(shipment));
                 if(total(shipment) == 0) {
                     lastMachine = currMachine;

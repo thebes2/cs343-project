@@ -41,8 +41,10 @@ void Groupoff::main() {
             break;
         } _Else {
             yield(groupoffDelay);
+            printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
             // actual card in the giftcard future is on the heap
             WATCard *card = new WATCard;
+            card->deposit(sodaCost);
             uSeqIter<FWATCardNode> seqIterJob;
             FWATCardNode *curr;
             unsigned int index = 0;
