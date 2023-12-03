@@ -2,28 +2,41 @@
 #include "printer.h"
 #include "bank.h"
 
-WATCardOffice::Courier::Courier(WATCardOffice& office, Bank& bank)
-    : office(office), bank(bank) {}
+#include <iostream>
+
+WATCardOffice::Courier::Courier(Printer &printer, WATCardOffice& office, Bank& bank, unsigned int id)
+    : printer{printer}, office(office), bank(bank), id{id} {}
 
 void WATCardOffice::Courier::main() {
     // _Else below might be a really bad way of doing this
     // Maybe requestWork can return nullptr to indicate no work
+    printer.print(Printer::Kind::Courier, id, 'S');
     for (;;) {
         _Accept(~Courier) {break;}
         _Else {
             // not busy waiting since requestWork blocks if no work
             Job* request = office.requestWork();
-            unsigned int id = request->args.id, amount = request->args.amount;
-            bank.withdraw(id, amount);
+            unsigned int studentId = request->args.id, amount = request->args.amount;
+            printer.print(Printer::Kind::Courier, id, 't', studentId, amount);
+            bank.withdraw(studentId, amount);
             if (prng(6) == 0) { // lost WATCard
+                printer.print(Printer::Kind::Courier, id, 'L', studentId);
                 request->result.delivery( new Lost{} );
+
             }
             else {
+                std::cout<<"HELP"<<std::endl;
+                printf("%p\n", request->args.card);
                 request->args.card->deposit(amount);
+                std::cout<<"HELP 2"<<std::endl;
                 request->result.delivery(request->args.card);
+                std::cout<<"HELP 3"<<std::endl;
+                printer.print(Printer::Kind::Courier, id, 'T', studentId, amount);
             }
+            delete request;
         }
     }
+    printer.print(Printer::Kind::Courier, id, 'F');
 }
 
 // to-do: make functions below as lean as possible by moving work to main function
@@ -32,6 +45,7 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
     cards.add(new Card{newCard});
     Job *newCardJob = new Job{Args{sid, amount, newCard}};
     jobs.add(new jobNode{newCardJob});
+    printf("%p\n", jobs.head()->job->args.card);
     return newCardJob->result;
 }
 
@@ -47,14 +61,13 @@ WATCardOffice::Job * WATCardOffice::requestWork() {
 
 void WATCardOffice::main() {
     for(unsigned int i=0; i<numCouriers; i++) {
-        courierPool[i] = new Courier{*this, bank};
+        courierPool[i] = new Courier{printer, *this, bank, i};
     }
     for(;;) {
         _Accept(~WATCardOffice) {
             break;
         } or _When(!jobs.empty()) _Accept(requestWork) {
             jobNode * curr = jobs.dropHead();
-            delete curr->job;
             delete curr;
         } or _Accept(transfer) {
 

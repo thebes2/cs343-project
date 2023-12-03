@@ -18,11 +18,13 @@ _Task WATCardOffice {
 		Job( Args args ) : args( args ) {}
 	};
 	_Task Courier {                         // communicates with bank
+		Printer &printer;
         WATCardOffice &office;
         Bank &bank;
         void main();
+		unsigned int id;
       public:
-        Courier(WATCardOffice& office, Bank &bank);
+        Courier(Printer & printer, WATCardOffice& office, Bank &bank, unsigned int id);
     };
 	struct jobNode : uSeqable {
 		Job *job;
