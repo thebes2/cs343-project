@@ -15,7 +15,12 @@ void WATCardOffice::Courier::main() {
         _Accept(~Courier) {break;}
         _Else {
             // not busy waiting since requestWork blocks if no work
-            Job* request = office.requestWork();
+            Job * request;
+            try {
+                request = office.requestWork();
+            } catch (const WATCardOffice::Empty &) {
+                break;
+            }
             unsigned int studentId = request->args.id, amount = request->args.amount;
             printer.print(Printer::Kind::Courier, id, 't', studentId, amount);
             bank.withdraw(studentId, amount);
@@ -51,6 +56,7 @@ WATCard::FWATCard WATCardOffice::transfer(unsigned int sid, unsigned int amount,
 }
 
 WATCardOffice::Job * WATCardOffice::requestWork() {
+    if(jobs.empty()) _Throw Empty{};
     return jobs.head()->job;
 }
 
@@ -60,6 +66,10 @@ void WATCardOffice::main() {
     }
     for(;;) {
         _Accept(~WATCardOffice) {
+            for(;;) {
+                _Accept(requestWork) {}
+                _Else {break;}
+            }
             break;
         } or _When(!jobs.empty()) _Accept(requestWork) {
             jobNode * curr = jobs.dropHead();

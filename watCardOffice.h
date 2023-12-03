@@ -44,6 +44,8 @@ _Task WATCardOffice {
 	unsigned int numCouriers;
 	Courier **courierPool;
 
+	_Event Empty{};
+
 	void main();
   public:
 	_Event Lost {};							// lost WATCard
