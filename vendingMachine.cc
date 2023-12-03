@@ -1,6 +1,7 @@
 #include "vendingMachine.h"
 #include "watCard.h"
 #include "student.h"
+#include <iostream> // FOR DEBUGGING PURPOSES ONLY
 using namespace std;
 
 VendingMachine::VendingMachine(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost) :
@@ -30,8 +31,10 @@ void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
 
 void VendingMachine::main() {
     // register with name server
+    cout << "MAIN" << endl;
     printer.print(Printer::Kind::Vending, 'S', sodaCost);
     nameServer.VMregister(this);
+    cout << "REGISTERED" << endl;
     for(;;) {
         _Accept(~VendingMachine) {
             break;

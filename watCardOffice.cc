@@ -64,7 +64,8 @@ void WATCardOffice::main() {
     }
 }
 
-WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers ) : printer{prt}, bank{bank}, numCouriers{numCouriers} {}
+WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers )
+    : printer{prt}, bank{bank}, numCouriers{numCouriers}, courierPool{new Courier*[numCouriers]} {}
 
 WATCardOffice::~WATCardOffice() {
     // delete courier pool
