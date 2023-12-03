@@ -12,17 +12,6 @@ Groupoff::Groupoff(Printer &prt, unsigned int numStudents, unsigned int sodaCost
     }
 }
 
-Groupoff::~Groupoff() {
-    delete[] order;
-    // delete[] futures; // incomplete futures are the problem of the client now
-    uSeqIter<FWATCardNode> seqIterJob;
-    FWATCardNode *curr;
-    for(seqIterJob.over(futures); seqIterJob>>curr;) {
-        futures.remove(curr);
-        delete curr;
-    }
-}
-
 WATCard::FWATCard Groupoff::giftCard() {
     WATCard::FWATCard newCard;
     currentCard = newCard;
@@ -60,3 +49,14 @@ void Groupoff::main() {
     printer.print(Printer::Kind::Groupoff, 'F');
 }
 
+
+Groupoff::~Groupoff() {
+    delete[] order;
+    uSeqIter<FWATCardNode> seqIterJob;
+    FWATCardNode * fp;
+    for(seqIterJob.over(futures); seqIterJob>>fp;) {
+        delete fp->card();
+        futures.remove(fp);
+        delete fp;
+    }
+}
