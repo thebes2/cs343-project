@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "uPRNG.h"
 #include "printer.h"
 #include "watCardOffice.h"
 #include "config.h"
@@ -39,6 +40,8 @@ int main(int argc, char *argv[]) {
 		cerr << "Usage: " << argv[0] << " [ config-file | 'd' [ seed (> 0) | 'd' [ processors (> 0) | 'd' ] ] ]" << endl;
 		exit(EXIT_FAILURE);
 	}
+
+	if (seed != -1) { set_seed(seed); }
 
     Printer printer(c.numStudents, c.numVendingMachines, c.numCouriers);
     Bank bank(c.numStudents);
