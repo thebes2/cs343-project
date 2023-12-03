@@ -21,8 +21,8 @@ _Monitor Printer {
 
 	// print a full line of the buffer and empty out all states
 	void flushBuffer();
-	// print a single state with a given suffix
-	void displayState(PrintState &s, char suf = '\t');
+	// print a single state
+	void displayState(PrintState &s);
 	
 	// helper functions to get which columns the print call should be displayed in
 	unsigned int getColumn(Kind kind);

@@ -112,14 +112,15 @@ unsigned int Printer::getColumn(Kind kind, unsigned int lid) {
     return idx;
 }
 
-void Printer::displayState(PrintState &s, char suf) {
-    cout << s.state;
-    if (s.def1) { cout << to_string(s.value1); }
-    if (s.def2) {
-        assert(s.def1);
-        cout << "," << to_string(s.value2);
+void Printer::displayState(PrintState &s) {
+    if (s.defined) {
+        cout << s.state;
+        if (s.def1) { cout << to_string(s.value1); }
+        if (s.def2) {
+            assert(s.def1);
+            cout << "," << to_string(s.value2);
+        }
     }
-    cout << suf;
 }
 
 void Printer::flushBuffer() {
@@ -128,7 +129,9 @@ void Printer::flushBuffer() {
         if (buffer[i].defined) { lastDefined = i+1; }
     }
     for (unsigned int i=0;i<lastDefined;i++) {
-        displayState(buffer[i], (i+1 == lastDefined? '\n':'\t'));
+        displayState(buffer[i]);
+        if (i+1 == lastDefined) cout << endl;
+        else cout << '\t';
         buffer[i].defined = false; // clear state
         buffer[i].def1 = false;
         buffer[i].def2 = false;
