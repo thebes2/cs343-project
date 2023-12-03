@@ -25,12 +25,8 @@ void WATCardOffice::Courier::main() {
 
             }
             else {
-                std::cout<<"HELP"<<std::endl;
-                printf("%p\n", request->args.card);
                 request->args.card->deposit(amount);
-                std::cout<<"HELP 2"<<std::endl;
                 request->result.delivery(request->args.card);
-                std::cout<<"HELP 3"<<std::endl;
                 printer.print(Printer::Kind::Courier, id, 'T', studentId, amount);
             }
             delete request;
@@ -45,7 +41,6 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
     cards.add(new Card{newCard});
     Job *newCardJob = new Job{Args{sid, amount, newCard}};
     jobs.add(new jobNode{newCardJob});
-    printf("%p\n", jobs.head()->job->args.card);
     return newCardJob->result;
 }
 
