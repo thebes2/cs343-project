@@ -23,15 +23,16 @@ void Student::main() {
 			or _Select(watcard) { currentCard = &watcard; }
 
 			try {
-				card = (*currentCard)();
-				currentVM->buy(static_cast<BottlingPlant::Flavours>(favouriteFlavour), *card);
-				printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'B':'G'),
-							  favouriteFlavour, card->getBalance());
-				if (currentCard == &giftcard) {
-					delete (*currentCard)();
-					currentCard->reset(); // giftcard is one time use only
+				_Enable {
+					card = (*currentCard)();
+					currentVM->buy(static_cast<BottlingPlant::Flavours>(favouriteFlavour), *card);
+					printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'B':'G'), favouriteFlavour, card->getBalance());
+					if (currentCard == &giftcard) {
+						delete (*currentCard)();
+						currentCard->reset(); // giftcard is one time use only
+					}
+					break;
 				}
-				break;
 			}
 			catch (WATCardOffice::Lost&) {
 				printer.print(Printer::Kind::Student, id, 'L');

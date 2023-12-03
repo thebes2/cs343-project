@@ -1,7 +1,6 @@
 #include "vendingMachine.h"
 #include "watCard.h"
 #include "student.h"
-#include <iostream>
 using namespace std;
 
 VendingMachine::VendingMachine(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost) :
@@ -26,26 +25,30 @@ unsigned int * VendingMachine::inventory() {
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
     currFlavour = flavour;
     currCard = &card;
-    bench.wait((uintptr_t)(void*)this);
+    bench.wait((uintptr_t)(void*)&uThisTask());
 }
 
 void VendingMachine::main() {
     // register with name server
-    nameServer.VMregister(this);
     printer.print(Printer::Kind::Vending, id, 'S', sodaCost);
+    nameServer.VMregister(this);
     for(;;) {
         _Accept(~VendingMachine) {
-            break;
+            break;  
         } or _When(!restocking) _Accept(buy) {
             // buy done by student or exception was thrown
             if(currCard->getBalance()<sodaCost) {
                 _Resume Funds{} _At *(Student*)(void*)bench.front();
-            } else if(sodaInventory[currFlavour]==0) {
+            }
+            else if(sodaInventory[currFlavour]==0) {
                 _Resume Stock{} _At *(Student*)(void*)bench.front();
-            } else if(prng(5)==0) {
+            } 
+            else if(prng(5)==0) {
+                ("3\n");
                 printer.print(Printer::Kind::Vending, id, 'A');
                 _Resume Free{} _At *(Student*)(void*)bench.front();
-            } else {
+            }
+            else {
                 currCard->withdraw(sodaCost);
                 sodaInventory[currFlavour] --;
                 printer.print(Printer::Kind::Vending, id, 'B', currFlavour, sodaInventory[currFlavour]);
