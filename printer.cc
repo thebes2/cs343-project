@@ -77,6 +77,7 @@ Printer::Printer(unsigned int numStudents, unsigned int numVendingMachines, unsi
 }
 
 Printer::~Printer() {
+    flushBuffer();
     cout << "***********************" << endl;
     delete[] buffer;
 }
