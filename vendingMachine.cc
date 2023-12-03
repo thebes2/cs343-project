@@ -38,7 +38,6 @@ void VendingMachine::main() {
             break;
         } or _When(!restocking) _Accept(buy) {
             // buy done by student or exception was thrown
-            cout << currCard->getBalance() << endl;
             if(currCard->getBalance()<sodaCost) {
                 _Resume Funds{} _At *(Student*)(void*)bench.front();
             } else if(sodaInventory[currFlavour]==0) {
@@ -47,7 +46,6 @@ void VendingMachine::main() {
                 printer.print(Printer::Kind::Vending, id, 'A');
                 _Resume Free{} _At *(Student*)(void*)bench.front();
             } else {
-                cout << currCard->getBalance() << " " << sodaCost << endl;
                 currCard->withdraw(sodaCost);
                 sodaInventory[currFlavour] --;
                 printer.print(Printer::Kind::Vending, id, 'B', currFlavour, sodaInventory[currFlavour]);

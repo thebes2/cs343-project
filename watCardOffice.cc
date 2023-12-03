@@ -66,9 +66,7 @@ WATCardOffice::Job * WATCardOffice::requestWork() {
 }
 
 void WATCardOffice::main() {
-    for(unsigned int i=0; i<numCouriers; i++) {
-        courierPool[i] = new Courier{printer, *this, bank, i};
-    }
+
     printer.print(Printer::Kind::WATCardOffice, 'S');
     for(;;) {
         _Accept(~WATCardOffice) {
@@ -91,7 +89,11 @@ void WATCardOffice::main() {
 }
 
 WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCouriers )
-    : printer{prt}, bank{bank}, numCouriers{numCouriers}, courierPool{new Courier*[numCouriers]} {}
+  : printer{prt}, bank{bank}, numCouriers{numCouriers}, courierPool{new Courier*[numCouriers]} {
+    for(unsigned int i=0; i<numCouriers; i++) {
+        courierPool[i] = new Courier{printer, *this, bank, i};
+    }
+}
 
 WATCardOffice::~WATCardOffice() {
     // delete courier pool

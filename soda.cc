@@ -43,28 +43,31 @@ int main(int argc, char *argv[]) {
 
 	if (seed != -1) { set_seed(seed); }
 
-    Printer printer(c.numStudents, c.numVendingMachines, c.numCouriers);
-    Bank bank(c.numStudents);
-	Parent parent(printer, bank, c.numStudents, c.parentalDelay);
-    WATCardOffice office(printer, bank, c.numCouriers);
-    Groupoff g(printer, c.numStudents, c.sodaCost, c.groupoffDelay);
-    NameServer nameServer(printer, c.numVendingMachines, c.numStudents);
-	VendingMachine *machines[c.numVendingMachines];
-	for(unsigned int i=0; i<c.numVendingMachines; i++) {
-		machines[i] = new VendingMachine(printer, nameServer, i, c.sodaCost);
-	}
+	uProcessor p[processors - 1]; // number of kernel threads
 	{
-		BottlingPlant bottlingPlant(printer, nameServer, c.numVendingMachines, c.maxShippedPerFlavour, c.maxStockPerFlavour, c.timeBetweenShipments);
-		Student *students[c.numStudents];
+		Printer printer(c.numStudents, c.numVendingMachines, c.numCouriers);
+		Bank bank(c.numStudents);
+		Parent parent(printer, bank, c.numStudents, c.parentalDelay);
+		WATCardOffice office(printer, bank, c.numCouriers);
+		Groupoff g(printer, c.numStudents, c.sodaCost, c.groupoffDelay);
+		NameServer nameServer(printer, c.numVendingMachines, c.numStudents);
+		VendingMachine *machines[c.numVendingMachines];
+		for(unsigned int i=0; i<c.numVendingMachines; i++) {
+			machines[i] = new VendingMachine(printer, nameServer, i, c.sodaCost);
+		}
+		{
+			BottlingPlant bottlingPlant(printer, nameServer, c.numVendingMachines, c.maxShippedPerFlavour, c.maxStockPerFlavour, c.timeBetweenShipments);
+			Student *students[c.numStudents];
 
-		for(unsigned int i=0; i<c.numStudents; i++) {
-			students[i] = new Student(printer, nameServer, office, g, i, c.maxPurchases);
+			for(unsigned int i=0; i<c.numStudents; i++) {
+				students[i] = new Student(printer, nameServer, office, g, i, c.maxPurchases);
+			}
+			for(unsigned int i=0; i<c.numStudents; i++) {
+				delete students[i];
+			}
 		}
-		for(unsigned int i=0; i<c.numStudents; i++) {
-			delete students[i];
+		for(unsigned int i=0; i<c.numVendingMachines; i++) {
+			delete machines[i];
 		}
-	}
-	for(unsigned int i=0; i<c.numVendingMachines; i++) {
-		delete machines[i];
 	}
 }
