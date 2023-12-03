@@ -47,7 +47,7 @@ WATCard::FWATCard WATCardOffice::create(unsigned int sid, unsigned int amount) {
     WATCard *newCard = new WATCard;
     cards.add(new Card{newCard});
     Job *newCardJob = new Job{Args{sid, amount, newCard}};
-    jobs.add(new jobNode{newCardJob});
+    jobs.add(newCardJob);
     return newCardJob->result;
 }
 
@@ -55,14 +55,14 @@ WATCard::FWATCard WATCardOffice::transfer(unsigned int sid, unsigned int amount,
     currSID = sid;
     currAmount = amount;
     Job *transferJob = new Job{Args{sid, amount, card}};
-    jobs.add(new jobNode{transferJob});
+    jobs.add(transferJob);
     return transferJob->result;
 }
 
 WATCardOffice::Job * WATCardOffice::requestWork() {
     uRendezvousAcceptor();
     if(jobs.empty()) _Throw Empty{};
-    return jobs.head()->job;
+    return jobs.dropHead();
 }
 
 void WATCardOffice::main() {
@@ -78,8 +78,6 @@ void WATCardOffice::main() {
             }
             break;
         } or _When(!jobs.empty()) _Accept(requestWork) {
-            jobNode * curr = jobs.dropHead();
-            delete curr;
             printer.print(Printer::Kind::WATCardOffice, 'W');
         } or _Accept(transfer) {
             printer.print(Printer::Kind::WATCardOffice, 'T', currSID, currAmount);
@@ -110,10 +108,9 @@ WATCardOffice::~WATCardOffice() {
     }
     
     //delete outstanding jobs?
-    uSeqIter<jobNode> seqIterJob;
-    jobNode * jp;
+    uSeqIter<Job> seqIterJob;
+    Job * jp;
     for(seqIterJob.over(jobs); seqIterJob>>jp;) {
-        delete jp->job;
         jobs.remove(jp);
         delete jp;
     }
