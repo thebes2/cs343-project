@@ -7,7 +7,7 @@ void WATCard::deposit(unsigned int amount) {
 }
 
 void WATCard::withdraw(unsigned int amount) {
-    assert(amount >= balance);
+    assert(amount <= balance);
     balance -= amount;
 }
 

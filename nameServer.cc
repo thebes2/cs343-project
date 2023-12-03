@@ -16,6 +16,7 @@ printer{prt}, numVendingMachines{numVendingMachines}, numStudents{numStudents}, 
 void NameServer::VMregister(VendingMachine *vendingMachine) {
     registered[vendingMachine->getId()] = vendingMachine;
     currVMId = vendingMachine->getId();
+    numRegistered ++;
 }
 
 VendingMachine * NameServer::getMachine(unsigned int id) {

@@ -1,6 +1,7 @@
 #include "bottlingPlant.h"
 #include "truck.h"
 #include "uPRNG.h"
+using namespace std;
 
 void BottlingPlant::getShipment(unsigned int cargo[]) {
     loadingCargo = cargo;

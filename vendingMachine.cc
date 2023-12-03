@@ -1,6 +1,7 @@
 #include "vendingMachine.h"
 #include "watCard.h"
 #include "student.h"
+#include <iostream>
 using namespace std;
 
 VendingMachine::VendingMachine(Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost) :
@@ -37,14 +38,16 @@ void VendingMachine::main() {
             break;
         } or _When(!restocking) _Accept(buy) {
             // buy done by student or exception was thrown
+            cout << currCard->getBalance() << endl;
             if(currCard->getBalance()<sodaCost) {
                 _Resume Funds{} _At *(Student*)(void*)bench.front();
             } else if(sodaInventory[currFlavour]==0) {
                 _Resume Stock{} _At *(Student*)(void*)bench.front();
             } else if(prng(5)==0) {
-                printer.print(Printer::Kind::Vending, 'A');
+                printer.print(Printer::Kind::Vending, id, 'A');
                 _Resume Free{} _At *(Student*)(void*)bench.front();
             } else {
+                cout << currCard->getBalance() << " " << sodaCost << endl;
                 currCard->withdraw(sodaCost);
                 sodaInventory[currFlavour] --;
                 printer.print(Printer::Kind::Vending, id, 'B', currFlavour, sodaInventory[currFlavour]);

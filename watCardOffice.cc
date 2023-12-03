@@ -56,6 +56,7 @@ WATCard::FWATCard WATCardOffice::transfer(unsigned int sid, unsigned int amount,
 }
 
 WATCardOffice::Job * WATCardOffice::requestWork() {
+    uRendezvousAcceptor();
     if(jobs.empty()) _Throw Empty{};
     return jobs.head()->job;
 }
