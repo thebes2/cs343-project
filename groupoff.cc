@@ -41,6 +41,7 @@ void Groupoff::main() {
                     counter--;
                     break;
                 }
+                i++;
             }
         }
     }

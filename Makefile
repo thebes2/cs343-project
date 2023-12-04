@@ -3,7 +3,7 @@ CXXFLAGS = -g -multi -Wall -Wextra -MMD -DSTRSTREAM # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 OBJECTS = config.o soda.o printer.o parent.o bank.o groupoff.o \
-			watCard.o bottlingPlant.o truck.o vendingMachine.o nameServer.o watCardOffice.o student.o main.o# list of object files
+			watCard.o bottlingPlant.o truck.o vendingMachine.o nameServer.o watCardOffice.o student.o # list of object files
 EXEC = soda
 
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"

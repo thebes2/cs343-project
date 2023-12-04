@@ -15,7 +15,7 @@ unsigned int VendingMachine::getId() const {
 }
 
 void VendingMachine::restocked() {
-    // reset flag variable
+    // empty??
 }
 
 unsigned int * VendingMachine::inventory() {
@@ -23,8 +23,7 @@ unsigned int * VendingMachine::inventory() {
 }
 
 void VendingMachine::buy(BottlingPlant::Flavours flavour, WATCard & card) {
-    currFlavour = flavour;
-    currCard = &card;
+    currFlavour = flavour; currCard = &card;
     bench.wait((uintptr_t)(void*)&uThisTask());
 }
 

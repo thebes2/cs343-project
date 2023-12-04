@@ -14,13 +14,11 @@ printer{prt}, numVendingMachines{numVendingMachines}, numStudents{numStudents}, 
 }
 
 void NameServer::VMregister(VendingMachine *vendingMachine) {
-    registered[vendingMachine->getId()] = vendingMachine;
-    currVMId = vendingMachine->getId();
-    numRegistered ++;
+    currRegistering = vendingMachine;
 }
 
 VendingMachine * NameServer::getMachine(unsigned int id) {
-    currStudentId = id; currVMId = assignments[id];
+    currStudentId = id; 
     return registered[assignments[id]];
 }
 
@@ -35,8 +33,12 @@ void NameServer::main() {
         _Accept(~NameServer) {
             break;
         } or _When(numRegistered < numVendingMachines) _Accept(VMregister) {
+            registered[currRegistering->getId()] = currRegistering;
+            currVMId = currRegistering->getId();
+            numRegistered ++;
             printer.print(Printer::Kind::NameServer, 'R', currVMId);
         } or _When(numRegistered == numVendingMachines) _Accept(getMachine) {
+            currVMId = assignments[currStudentId];
             assignments[currStudentId] = (assignments[currStudentId] + 1) % numVendingMachines;
             printer.print(Printer::Kind::NameServer, 'N', currStudentId, currVMId);
         } or _When(numRegistered == numVendingMachines) _Accept(getMachineList) {

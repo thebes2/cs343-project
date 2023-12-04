@@ -11,12 +11,14 @@ _Task WATCardOffice {
 		unsigned int id, amount;
 		WATCard *card;
 		Args(unsigned int id, unsigned int amount, WATCard *card) : id{id}, amount{amount}, card{card} {}
+		Args():id{0}, amount{0}, card{nullptr} {}
 	};
 	// refactor Job below to directly inherit from uSerqable
 	struct Job : uSeqable {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
 		WATCard::FWATCard result;			// return future
 		Job( Args args ) : args( args ) {}
+		Job() : args{} {}
 	};
 	_Task Courier {                         // communicates with bank
 		Printer &printer;
@@ -39,8 +41,10 @@ _Task WATCardOffice {
 
 	Printer &printer;
 	Bank &bank;
-	unsigned int numCouriers, currSID, currAmount; 
+	unsigned int numCouriers, currSID, currAmount, activeCouriers, jobCounter;
+	WATCard *currCard;
 	Courier **courierPool;
+	uCondition bench;
 
 	_Event Empty{};
 

@@ -9,6 +9,7 @@ Student::Student(Printer & prt, NameServer & nameServer, WATCardOffice & cardOff
 void Student::main() {
 	numTimes = prng(1, maxPurchases);
 	favouriteFlavour = prng(0, 3);
+	printer.print(Printer::Kind::Student, id, 'S', favouriteFlavour, numTimes);
 	WATCard::FWATCard watcard = office.create(id, 5);
 	WATCard::FWATCard giftcard = groupoff.giftCard();
 	WATCard::FWATCard *currentCard = nullptr;
@@ -63,5 +64,6 @@ void Student::main() {
 			}
 		}
 	}
+	_Select(watcard);
 	printer.print(Printer::Kind::Student, id, 'F');
 }
