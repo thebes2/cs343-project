@@ -3,15 +3,17 @@
 void Parent::main() {
     printer.print(Printer::Kind::Parent, 'S');
     for (;;) {
-        for (unsigned int i=0;i<parentalDelay;i++) {
-            _When(true) _Accept(~Parent) { goto exit; }
-            _Else { yield(1); }
+        _Accept(~Parent) {
+            break;
         }
-        unsigned int id = prng(numStudents);
-        unsigned int amt = prng(3) + 1;
-        printer.print(Printer::Kind::Parent, 'D', id, amt);
-        bank.deposit(id, amt);
-    } exit:
+        _Else {
+            yield(parentalDelay);
+            unsigned int id = prng(0, numStudents-1);
+            unsigned int amt = prng(1, 3);
+            printer.print(Printer::Kind::Parent, 'D', id, amt);
+            bank.deposit(id, amt);
+        }
+    } 
     printer.print(Printer::Kind::Parent, 'F');
 }
 
