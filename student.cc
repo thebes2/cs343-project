@@ -17,6 +17,7 @@ void Student::main() {
 	VendingMachine *currentVM = nameServer.getMachine(id);
 	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
 	unsigned int sodas = 0;
+	bool usedGiftcard = false;
 	while (sodas < numTimes) {
 		yield(prng(1, 10));
 		for (;;) {
@@ -29,6 +30,7 @@ void Student::main() {
 					currentVM->buy(static_cast<BottlingPlant::Flavours>(favouriteFlavour), *card);
 					printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'B':'G'), favouriteFlavour, card->getBalance());
 					if (currentCard == &giftcard) {
+						usedGiftcard = true;
 						delete (*currentCard)();
 						currentCard->reset(); // giftcard is one time use only
 					}
@@ -65,5 +67,12 @@ void Student::main() {
 		}
 	}
 	_Select(watcard);
+	if (!usedGiftcard) { // also have to cleanup giftcard
+		giftcard.cancel();
+		if (giftcard.available()) { // groupoff delivered the card before cancelling
+			try { _Enable{ delete giftcard(); } }
+			catch (...) {}
+		}
+	}
 	printer.print(Printer::Kind::Student, id, 'F');
 }

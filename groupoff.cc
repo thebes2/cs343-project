@@ -34,7 +34,12 @@ void Groupoff::main() {
             // printf("cnt prng for giving gc: %d\n", cnt);
             for(seqIterJob.over(futures); seqIterJob>>curr;) {
                 if(i==cnt) {
-                    curr->card.delivery(card);
+                    if (!curr->card.cancelled()) { // only deliver the future if not cancelled
+                        curr->card.delivery(card);
+                    }
+                    else {
+                        delete card;
+                    }
                     printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
                     futures.remove(curr);
                     delete curr;
