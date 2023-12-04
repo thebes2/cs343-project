@@ -8,10 +8,12 @@ void Parent::main() {
         }
         _Else {
             yield(parentalDelay);
-            unsigned int id = prng(0, numStudents-1);
             unsigned int amt = prng(1, 3);
-            printer.print(Printer::Kind::Parent, 'D', id, amt);
+            unsigned int id = prng(0, numStudents-1);
+            // printf("parent id: %d\n", id);
+            // printf("amt parent: %d\n", amt);
             bank.deposit(id, amt);
+            printer.print(Printer::Kind::Parent, 'D', id, amt);
         }
     } 
     printer.print(Printer::Kind::Parent, 'F');

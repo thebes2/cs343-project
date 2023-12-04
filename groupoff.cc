@@ -24,20 +24,23 @@ void Groupoff::main() {
             break;
         } _Else {
             yield(groupoffDelay);
-            printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
             // actual card in the giftcard future is on the heap
             WATCard *card = new WATCard;
             card->deposit(sodaCost);
             uSeqIter<FWATCardNode> seqIterJob;
             FWATCardNode *curr;
-            unsigned int cnt = prng(numStudents - i);
+            unsigned int i = 0;
+            unsigned int cnt = prng(counter);
+            // printf("cnt prng for giving gc: %d\n", cnt);
             for(seqIterJob.over(futures); seqIterJob>>curr;) {
-                if (cnt == 0 && !curr->delivered) {
-                    curr->delivered = true;
+                if(i==cnt) {
                     curr->card.delivery(card);
+                    printer.print(Printer::Kind::Groupoff, 'D', sodaCost);
+                    futures.remove(curr);
+                    delete curr;
+                    counter--;
                     break;
                 }
-                if (!curr->delivered) { cnt --; }
             }
         }
     }

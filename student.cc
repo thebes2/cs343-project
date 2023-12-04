@@ -5,21 +5,32 @@
 Student::Student(Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases)
   : printer(prt), nameServer(nameServer), office(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {
-	numTimes = prng(maxPurchases) + 1;
-	favouriteFlavour = prng(4);
+	numTimes = prng(1, maxPurchases);
+	// printf("prng for student ctor: %d\n", numTimes);
+	favouriteFlavour = prng(0, 3);
+	// printf("prng for fav flavor student ctor: %d\n", favouriteFlavour);
 	printer.print(Printer::Kind::Student, id, 'S', favouriteFlavour, numTimes);
+	watcard = office.create(id, 5);
+	giftcard = groupoff.giftCard();
+	currentVM = nameServer.getMachine(id);
+	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
+	sodas = 0;
 }
 
 void Student::main() {
-	WATCard::FWATCard watcard = office.create(id, 5);
-	WATCard::FWATCard giftcard = groupoff.giftCard();
-	WATCard::FWATCard *currentCard = nullptr;
-	WATCard* card = nullptr;
-	VendingMachine *currentVM = nameServer.getMachine(id);
-	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
-	unsigned int sodas = 0;
+	// // WATCard::FWATCard watcard = office.create(id, 5);
+	// // WATCard::FWATCard giftcard = groupoff.giftCard();
+	// WATCard::FWATCard *currentCard = nullptr;
+	// WATCard* card = nullptr;
+	// VendingMachine *currentVM = nameServer.getMachine(id);
+	// printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
+	// unsigned int sodas = 0;
 	while (sodas < numTimes) {
-		yield(prng(1, 10));
+		unsigned int y = prng(1, 10);
+		// printf("yield time in student: %d\n", y);
+		yield(y);
+		WATCard* card = nullptr;
+		WATCard::FWATCard *currentCard = nullptr;
 		for (;;) {
 			_Select(giftcard) { currentCard = &giftcard; }
 			or _Select(watcard) { currentCard = &watcard; }
@@ -51,7 +62,6 @@ void Student::main() {
 				else { // did not watch advertisement
 					printer.print(Printer::Kind::Student, id, 'X');
 				}
-				sodas ++;
 				break;
 			}
 			catch (VendingMachine::Funds&) { // insufficient funds, so transfer funds to watcard

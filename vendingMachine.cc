@@ -37,22 +37,28 @@ void VendingMachine::main() {
             break;  
         } or _When(!restocking) _Accept(buy) {
             // buy done by student or exception was thrown
+            // unsigned int y = prng(5);
+            // printf("VM chance free: %d\n", y);
             if(currCard->getBalance()<sodaCost) {
                 _Resume Funds{} _At *(Student*)(void*)bench.front();
+                bench.signalBlock();
             }
             else if(sodaInventory[currFlavour]==0) {
                 _Resume Stock{} _At *(Student*)(void*)bench.front();
+                bench.signalBlock();
+                
             } 
-            else if(prng(5)==0) {
-                printer.print(Printer::Kind::Vending, id, 'A');
+            else if(prng(1,5)==1) {
                 _Resume Free{} _At *(Student*)(void*)bench.front();
+                bench.signalBlock();
+                printer.print(Printer::Kind::Vending, id, 'A');
             }
             else {
                 currCard->withdraw(sodaCost);
                 sodaInventory[currFlavour] --;
+                bench.signalBlock();
                 printer.print(Printer::Kind::Vending, id, 'B', currFlavour, sodaInventory[currFlavour]);
             }
-            bench.signalBlock();
         } or _Accept(inventory) {
             printer.print(Printer::Kind::Vending, id, 'r');
             restocking = true;

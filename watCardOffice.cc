@@ -16,21 +16,24 @@ void WATCardOffice::Courier::main() {
         _Else {
             // not busy waiting since requestWork blocks if no work
             Job * request;
-            try {
+            try { _Enable {
                 request = office.requestWork();
+                }
             } catch (const WATCardOffice::Empty &) {
                 break;
             }
             unsigned int studentId = request->args.id, amount = request->args.amount;
             printer.print(Printer::Kind::Courier, id, 't', studentId, amount);
             bank.withdraw(studentId, amount);
-            if (prng(6) == 0) { // lost WATCard
+            request->args.card->deposit(amount);
+            unsigned int y = prng(0,5);
+            // printf("courier chance lost: %d\n", y);
+            if (y == 0) { // lost WATCard
                 printer.print(Printer::Kind::Courier, id, 'L', studentId);
                 request->result.delivery( new Lost{} );
 
             }
             else {
-                request->args.card->deposit(amount);
                 request->result.delivery(request->args.card);
                 printer.print(Printer::Kind::Courier, id, 'T', studentId, amount);
             }

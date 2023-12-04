@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 			case 3:
 				if (strcmp(argv[2], "d") != 0) {
 					seed = convert(argv[2]);
-					if (seed <= 0) throw cmd_error{};
+					if(seed<=0) throw cmd_error{};
 				}
 			case 2:
 				if (strcmp(argv[1], "d") != 0) {
@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (seed != 0) { set_seed(seed); }
+	cout<<"seed: "<<get_seed()<<endl;
 
 	uProcessor p[processors - 1]; // number of kernel threads
 	{
