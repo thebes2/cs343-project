@@ -12,10 +12,6 @@ _Task Student {
 	WATCardOffice &office;
 	Groupoff &groupoff;
 	unsigned int id, maxPurchases, numTimes, favouriteFlavour;
-	WATCard::FWATCard watcard;
-	WATCard::FWATCard giftcard;
-	VendingMachine *currentVM;
-	unsigned int sodas = 0;
 	void main();
   public:
 	Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,

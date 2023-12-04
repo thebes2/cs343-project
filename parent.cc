@@ -10,8 +10,6 @@ void Parent::main() {
             yield(parentalDelay);
             unsigned int amt = prng(1, 3);
             unsigned int id = prng(0, numStudents-1);
-            // printf("parent id: %d\n", id);
-            // printf("amt parent: %d\n", amt);
             bank.deposit(id, amt);
             printer.print(Printer::Kind::Parent, 'D', id, amt);
         }

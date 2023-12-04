@@ -36,9 +36,6 @@ void VendingMachine::main() {
         _Accept(~VendingMachine) {
             break;  
         } or _When(!restocking) _Accept(buy) {
-            // buy done by student or exception was thrown
-            // unsigned int y = prng(5);
-            // printf("VM chance free: %d\n", y);
             if(currCard->getBalance()<sodaCost) {
                 _Resume Funds{} _At *(Student*)(void*)bench.front();
                 bench.signalBlock();

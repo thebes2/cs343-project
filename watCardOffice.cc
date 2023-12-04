@@ -26,9 +26,7 @@ void WATCardOffice::Courier::main() {
             printer.print(Printer::Kind::Courier, id, 't', studentId, amount);
             bank.withdraw(studentId, amount);
             request->args.card->deposit(amount);
-            unsigned int y = prng(0,5);
-            // printf("courier chance lost: %d\n", y);
-            if (y == 0) { // lost WATCard
+            if (prng(0,5)==0) { // lost WATCard
                 printer.print(Printer::Kind::Courier, id, 'L', studentId);
                 request->result.delivery( new Lost{} );
 

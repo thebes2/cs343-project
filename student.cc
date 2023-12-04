@@ -4,33 +4,20 @@
 
 Student::Student(Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,
 			 unsigned int id, unsigned int maxPurchases)
-  : printer(prt), nameServer(nameServer), office(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {
-	numTimes = prng(1, maxPurchases);
-	// printf("prng for student ctor: %d\n", numTimes);
-	favouriteFlavour = prng(0, 3);
-	// printf("prng for fav flavor student ctor: %d\n", favouriteFlavour);
-	printer.print(Printer::Kind::Student, id, 'S', favouriteFlavour, numTimes);
-	watcard = office.create(id, 5);
-	giftcard = groupoff.giftCard();
-	currentVM = nameServer.getMachine(id);
-	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
-	sodas = 0;
-}
+  : printer(prt), nameServer(nameServer), office(cardOffice), groupoff(groupoff), id(id), maxPurchases(maxPurchases) {}
 
 void Student::main() {
-	// // WATCard::FWATCard watcard = office.create(id, 5);
-	// // WATCard::FWATCard giftcard = groupoff.giftCard();
-	// WATCard::FWATCard *currentCard = nullptr;
-	// WATCard* card = nullptr;
-	// VendingMachine *currentVM = nameServer.getMachine(id);
-	// printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
-	// unsigned int sodas = 0;
+	numTimes = prng(1, maxPurchases);
+	favouriteFlavour = prng(0, 3);
+	WATCard::FWATCard watcard = office.create(id, 5);
+	WATCard::FWATCard giftcard = groupoff.giftCard();
+	WATCard::FWATCard *currentCard = nullptr;
+	WATCard* card = nullptr;
+	VendingMachine *currentVM = nameServer.getMachine(id);
+	printer.print(Printer::Kind::Student, id, 'V', currentVM->getId());
+	unsigned int sodas = 0;
 	while (sodas < numTimes) {
-		unsigned int y = prng(1, 10);
-		// printf("yield time in student: %d\n", y);
-		yield(y);
-		WATCard* card = nullptr;
-		WATCard::FWATCard *currentCard = nullptr;
+		yield(prng(1, 10));
 		for (;;) {
 			_Select(giftcard) { currentCard = &giftcard; }
 			or _Select(watcard) { currentCard = &watcard; }

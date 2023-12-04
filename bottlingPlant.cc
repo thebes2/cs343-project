@@ -22,7 +22,6 @@ void BottlingPlant::main() {
             yield(timeBetweenShipments);
             for(unsigned int i=0; i<numFlavours; i++) {
                 currentStock[i] = prng(0, maxShippedPerFlavour);
-                // printf("bottling plant stock run: %d\n", currentStock[i]);
                 randomQuantity += currentStock[i];
             }
             printer.print(Printer::Kind::BottlingPlant, 'G', randomQuantity);

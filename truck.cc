@@ -24,16 +24,13 @@ void Truck::main() {
             break;
         }
         _Else{
-            unsigned int y = prng(1, 10);
-            // printf("truck yield: %d\n", y);
-            yield(y);
+            yield(prng(1, 10));
             try { _Enable {
                     plant.getShipment(shipment);
                 }
             } catch(const BottlingPlant::Shutdown &) {
                 break;
             }
-            // printf("got shipment\n");
             printer.print(Printer::Kind::Truck, 'P', total(shipment));
             for(unsigned int i=1; i<=numVendingMachines && total(shipment)!=0; i++) {
                 unsigned int currMachine = (lastMachine + i) % numVendingMachines;
@@ -49,8 +46,8 @@ void Truck::main() {
                 if (unfilledStock > 0) {
                     printer.print(Printer::Kind::Truck, 'U', currMachine, unfilledStock);
                 }
-                machines[currMachine]->restocked();
                 printer.print(Printer::Kind::Truck, 'D', currMachine, total(shipment));
+                machines[currMachine]->restocked();
                 if(total(shipment) == 0) {
                     lastMachine = currMachine;
                     break;
