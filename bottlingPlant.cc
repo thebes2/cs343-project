@@ -19,6 +19,7 @@ void BottlingPlant::main() {
     for(;;) {
         if(randomQuantity==0) {
             // perform production run and yield
+            yield(timeBetweenShipments);
             for(unsigned int i=0; i<numFlavours; i++) {
                 currentStock[i] = prng(0, maxShippedPerFlavour);
                 // printf("bottling plant stock run: %d\n", currentStock[i]);
@@ -26,7 +27,6 @@ void BottlingPlant::main() {
             }
             printer.print(Printer::Kind::BottlingPlant, 'G', randomQuantity);
         }
-        yield(timeBetweenShipments);
         _Accept(~BottlingPlant) {
             _Accept(getShipment) {
                 _Resume Shutdown{} _At *(Truck*)(void*)bench.front();
