@@ -42,7 +42,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (seed != 0) { set_seed(seed); }
-	cout<<"seed: "<<get_seed()<<endl;
 
 	uProcessor p[processors - 1]; // number of kernel threads
 	{
