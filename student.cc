@@ -41,9 +41,9 @@ void Student::main() {
 				watcard = office.create(id, 5);
 			}
 			catch (VendingMachine::Free&) { // free soda, just yield 4 times
+				printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'A':'a'),
+								favouriteFlavour, card->getBalance());
 				if (prng(2) == 0) { // watched advertisement
-					printer.print(Printer::Kind::Student, id, (currentCard == &watcard? 'A':'a'),
-								  favouriteFlavour, card->getBalance());
 					yield(4);
 				}
 				else { // did not watch advertisement
