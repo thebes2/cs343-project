@@ -68,11 +68,11 @@ void Student::main() {
 	}
 	_Select(watcard);
 	if (!usedGiftcard) { // also have to cleanup giftcard
-		giftcard.cancel();
-		if (giftcard.available()) { // groupoff delivered the card before cancelling
-			try { _Enable{ delete giftcard(); } }
-			catch (...) {}
+		if (!giftcard.available()) { // cancel if giftcard not availablel
+			giftcard.cancel();
 		}
+		try { _Enable{ delete giftcard(); } }
+		catch (...) {}
 	}
 	printer.print(Printer::Kind::Student, id, 'F');
 }
