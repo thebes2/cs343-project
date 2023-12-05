@@ -13,8 +13,8 @@ _Task WATCardOffice {
 		Args(unsigned int id, unsigned int amount, WATCard *card) : id{id}, amount{amount}, card{card} {}
 		Args():id{0}, amount{0}, card{nullptr} {}
 	};
-	// refactor Job below to directly inherit from uSerqable
-	struct Job : uSeqable {							// marshalled arguments and return future
+	// inherit from uColable to use in uQueue list to manage jobs
+	struct Job : uColable {							// marshalled arguments and return future
 		Args args;							// call arguments (YOU DEFINE "Args")
 		WATCard::FWATCard result;			// return future
 		Job( Args args ) : args( args ) {}
@@ -29,24 +29,24 @@ _Task WATCardOffice {
       public:
         Courier(Printer & printer, WATCardOffice& office, Bank &bank, unsigned int id);
     };
-	
-	struct Card: uSeqable {
+	// Card is a wrapped for WATcard to allow it to be stored in a uQueue list to manage termination at the end
+	struct Card: uColable {
 		WATCard *card;
 		Card(WATCard *card) : card{card} {}
 	};
 
-	uSequence<Job> jobs;
-	uSequence<Card> cards;
+	uQueue<Job> jobs; // manage list of jobs for couriers
+	uQueue<Card> cards; // manage list of all WATCards
 	WATCard::FWATCard result;
 
 	Printer &printer;
 	Bank &bank;
 	unsigned int numCouriers, currSID, currAmount, activeCouriers, jobCounter;
 	WATCard *currCard;
-	Courier **courierPool;
-	uCondition bench;
+	Courier **courierPool; // array of pointers to Courier Task objects
+	uCondition bench; // bench used to momentarily put to sleep other Task's accessing public mutex members
 
-	_Event Empty{};
+	_Event Empty{}; // Empty exception used to let couriers know there are no more jobs to work and let them terminate
 
 	void main();
   public:

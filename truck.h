@@ -12,7 +12,7 @@ _Task Truck {
     unsigned int numVendingMachines, maxStockPerFlavour;
     unsigned int *shipment;
     void main();
-    unsigned int total(unsigned int*);
+    _Nomutex unsigned int total(unsigned int*);
   public:
     Truck(Printer & prt, NameServer & nameServer, BottlingPlant & plant, unsigned int numVendingMachines, unsigned int maxStockPerFlavour);
 };
