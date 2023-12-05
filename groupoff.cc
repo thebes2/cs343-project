@@ -19,7 +19,7 @@ void Groupoff::main() {
     // let all students call and request a giftcard
     for(counter=0; counter<numStudents; counter++) {
         _Accept(giftCard) {
-            futures.add(new FWATCardNode{currentCard}); // add giftcard to uSequence list
+            futures.add(new FWATCardNode{currentCard}); // add giftcard to uQueue list
         }
     }
     for(unsigned int i=0; i<numStudents; i++) {
@@ -32,12 +32,12 @@ void Groupoff::main() {
             // deposit money into the giftcard
             card->deposit(sodaCost);
             // choose random student to give loaded giftcard to
-            uSeqIter<FWATCardNode> seqIterJob;
+            uQueueIter<FWATCardNode> qIterJob;
             FWATCardNode *curr;
             unsigned int i = 0;
             unsigned int cnt = prng(counter);
             // iterate over list to give random giftcard to student
-            for(seqIterJob.over(futures); seqIterJob>>curr;) {
+            for(qIterJob.over(futures); qIterJob>>curr;) {
                 if(i==cnt) {
                     // only deliver the future giftcard if hasn't been cancelled
                     if (!curr->card.cancelled()) {
@@ -62,10 +62,11 @@ void Groupoff::main() {
 
 
 Groupoff::~Groupoff() {
-    uSeqIter<FWATCardNode> seqIterJob;
+    // iterate all the giftcard nodes in uQueue list and delete the nodes
+    uQueueIter<FWATCardNode> qIterJob;
     FWATCardNode * fp;
-    for(seqIterJob.over(futures); seqIterJob>>fp;) {
-        futures.remove(fp);
-        delete fp;
+    for(qIterJob.over(futures); qIterJob>>fp;) {
+        futures.remove(fp); // remove from list
+        delete fp; // delete the removed node
     }
 }

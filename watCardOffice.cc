@@ -63,9 +63,9 @@ void WATCardOffice::main() {
     for(;;) {
         _Accept(~WATCardOffice) {
             // delete outstanding jobs on the jobs list if they remain since they can't be worked on
-            uQueueIter<Job> seqIterJob;
+            uQueueIter<Job> qIterJob;
             Job * jp;
-            for(seqIterJob.over(jobs); seqIterJob>>jp;) {
+            for(qIterJob.over(jobs); qIterJob>>jp;) {
                 jobs.remove(jp);
                 delete jp;
             }
@@ -121,10 +121,10 @@ WATCardOffice::~WATCardOffice() {
     }
     delete[] courierPool;
 
-    // delete all watcards that were generated and their corresponding storage on uSequence list
-    uQueueIter<Card> seqIterCard;
+    // delete all watcards that were generated and their corresponding storage on uQueue list
+    uQueueIter<Card> qIterJob;
     Card * cp;
-    for(seqIterCard.over(cards); seqIterCard>>cp;) {
+    for(qIterJob.over(cards); qIterJob>>cp;) {
         delete cp->card; // delete WATCard
         cards.remove(cp);
         delete cp; // delete node itself used to store WATCard on list
