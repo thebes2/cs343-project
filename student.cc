@@ -76,11 +76,7 @@ void Student::main() {
 	}
 	_Select(watcard); // for the special case where student only buys one soda with a giftcard; wait for watcard to be ready from courier
 	if (!usedGiftcard) { // also have to cleanup giftcard
-		if (!giftcard.available()) { // cancel if giftcard not available
-			giftcard.cancel();
-		}
-		try { _Enable{ delete giftcard(); } }
-		catch (...) {}
+		delete giftcard(); // blocking call to delete giftcard it Groupoff hasn't delivered the future yet
 	}
 	printer.print(Printer::Kind::Student, id, 'F');
 }
