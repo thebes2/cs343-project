@@ -8,9 +8,9 @@ _Task VendingMachine;
 _Task NameServer {
     Printer &printer;
     unsigned int numVendingMachines, numStudents, numRegistered, currVMId, currStudentId;
-    VendingMachine **registered; 
-    VendingMachine *currRegistering;
-    int *assignments;
+    VendingMachine **registered; // heap based array to keep track of all vending machines
+    VendingMachine *currRegistering; // pointer to current machine attempting to register
+    int *assignments; // integer array whose index represents students and maps it to a registered vending machine
     void main();
   public:
     NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents );

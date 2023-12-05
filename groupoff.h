@@ -12,9 +12,8 @@ _Task Groupoff {
         bool delivered = false;
         FWATCardNode(WATCard::FWATCard card) : card{card} {}
     };
-    WATCard::FWATCard currentCard;
-    uSequence<FWATCardNode> futures;
-    //WATCard::FWATCard **futures;
+    WATCard::FWATCard currentCard; // temporary variable to store current card
+    uSequence<FWATCardNode> futures; // uSequence list to store futures of giftcards created by Groupoff
 	  void main();
   public:
 	  Groupoff( Printer & prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay );

@@ -13,7 +13,7 @@ _Task VendingMachine {
     bool restocking;
     BottlingPlant::Flavours currFlavour;
     WATCard* currCard;
-    uCondition bench;
+    uCondition bench; // bench to wait clients on for main to do all of the work
     void main();
 
   public:
