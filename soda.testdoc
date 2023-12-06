@@ -301,3 +301,32 @@ D1,3                            d0,6    P
 D0,3                            D0,0    G5                      R                       T0,5
                                                                                         t1,5
 D1,1            W               P5              B1,3            B1,0                    T1,5
+
+=======================================
+
+9. We verify the behavior of student when the courier loses its watcard. In all other cases,
+if the student either makes the purchase successfully or fails due to funds or insufficient
+stock, the student yields before trying again. However, if the watcard is lost, the student
+attempts the purchase immediately.
+
+We run this case with ./soda soda.config 5 1
+
+The output is:
+
+Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+S	S	S	S		S	S2,7	S2,7	S2	S2	S2	S
+		C0,5	R0	S
+D0,1			R1		G9						t0,5
+		W	R2
+D0,3		C1,5	N0,0			V0	V1
+D0,2			N1,1	P9		L					L0
+				d0,9
+				U0,11
+D0,1	D2	W		D0,0	P			r			t1,5
+		C0,5			G8	G2,0		R
+D1,1				P8				B2,2
+
+We see that here the watcard is populated before giftcard so the student tries to make a 
+purchase using it. However, they realize that the watcard is lost, so they immediately
+purchase another soda without waiting using the giftcard which is now available.
