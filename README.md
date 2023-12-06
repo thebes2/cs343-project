@@ -1,4 +1,4 @@
-## CS343 Project
+## CS343 Project: Spurious Wakeups
 
 ### Components:
 
