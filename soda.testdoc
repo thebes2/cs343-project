@@ -103,24 +103,52 @@ NumStudents 1
 MaxPurchases 1
 GroupoffDelay 100
 
-This means the student will complete its single purchase with the watcard first
-and terminate before the giftcard future is filled. Usually, student is the one
-that deletes the giftcard after it has been used, but if student terminates early
-then groupoff must delete it instead.
+This means the student will complete its single purchase with the watcard before the
+giftcard is available. We decide that the student should wait for the giftcard in this
+case, and be responsible for cleaning it up.
 
 We run the case with:
 ./soda 2.config 1 1
 
-and for the sake of brevity, the last few lines are:
+and for the sake of brevity, the first few lines are:
+Parent  Gropoff WATOff  Names   Truck   Plant   Stud0   Mach0   Mach1   Mach2   Cour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+S       S       S       S               S       S1,1    S2      S2      S2      S
+                C0,5    R0      S
+D0,3                    R1              G6                                      t0,5
+                W       R2                      V0
+D0,2                    N0,0                                                    T0,5
+D0,3                    N0,1    P6              V1
+                                d0,6
+                                U0,14
+                        N0,2    D0,0    P       V2      r
+D0,3                    N0,0            G5      V0      R
+D0,3                            P5
+                                d1,5
+                                U1,15
+                                D1,0    P                       r
+D0,1                            P6      G6      B1,3    B1,0    R
+                                d2,6
+                                U2,14
+
+and the last few are:
+D0,1                            D0,4    G6              r               R
+                                d1,4
+                                U1,1
+                                D1,4                    R       r
+D0,3    D2                                      F               R
+D0,3    F                       F
+D0,2                                    F               F       F
+D0,2                    F                                               F
+D0,1            F                                                               F
+D0,3
 D0,1
-D0,3    D2
-D0,3    F       F                                                               F
-D0,2
 F
 ***********************
 
-we can see that student exits before the giftcard future is filled, but we are
-still able to delete the giftcard and prevent a memory leak.
+Here we see that while the student is done all purchases and could have
+exited, it instead waits for groupoff to deliver the card to the future. 
+Then, it cleans up this giftcard so there are no memory leaks.
 
 =======================================
 
