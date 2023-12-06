@@ -1,4 +1,34 @@
-TODO: add some basic command line tests...
+Command Line Tests
+=======================================
+
+1. We check for invalid files by calling
+./soda nonExistentFile.config
+
+This gives the output:
+Error: could not open input file "nonExistentFile.config"
+
+which is reasonable behaviour when the file is not accessible.
+
+2. We check that placeholders are ignored in the argument list. We do this
+by calling
+
+./soda soda.config d 2
+
+which runs the code correctly using multiple processors and the default seed.
+
+
+3. Finally, we check that the rng seed is being set correctly. To do this,
+we run
+
+./soda soda.config 1
+./soda soda.config 1
+./soda soda.config 1
+./soda soda.config 2
+
+and verify that the output of the first three runs match, and the fourth run
+is reasonably distinct from the other seed.
+
+
 
 Algorithmic Tests
 =======================================
@@ -247,4 +277,27 @@ D0,3                            D0,8    G9                      r
 
 and we note the truck (the column with P6), ends its delivery run with 4 leftover
 sodas, but on the next delivery run (P8), it does not keep any of the old bottles
-due to the output d0,8 meaning it only has 8 bottles.
+
+=======================================
+
+8. Running with multiple processors. In this case, we run the default config
+but with two processors
+
+We run this with ./soda soda.config 1 2
+
+We verify that the output still looks reasonable and is reasonably distinct from
+the single processor case:
+
+Parent  Gropoff WATOff  Names   Truck   Plant   Stud0   Stud1   Mach0   Mach1   Mach2   Cour0
+******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+S       S       S       S               S       S1,4    S1,4    S2      S2      S2      S
+                C0,5    R0      S
+D1,3                    R1              G6                                              t0,5
+D0,2            W       R2
+                C1,5    N0,0                    V0      V1
+D1,3                    N1,1    P6
+D1,3                            d0,6    P
+        D2                      U0,14                           r
+D0,3                            D0,0    G5                      R                       T0,5
+                                                                                        t1,5
+D1,1            W               P5              B1,3            B1,0                    T1,5
